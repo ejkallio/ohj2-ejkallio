@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxLP.LPLevyController">
    <bottom>
       <VBox alignment="CENTER" BorderPane.alignment="BOTTOM_RIGHT">
          <children>
@@ -24,8 +24,8 @@
                <children>
                   <ButtonBar prefHeight="40.0">
                     <buttons>
-                      <Button mnemonicParsing="false" text="Ok" />
-                        <Button mnemonicParsing="false" text="Cancel" />
+                      <Button mnemonicParsing="false" onAction="#handleOK" text="Ok" />
+                        <Button mnemonicParsing="false" onAction="#handleCancel" text="Cancel" />
                     </buttons>
                      <padding>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -83,7 +83,7 @@
                         <Insets top="5.0" />
                      </GridPane.margin>
                   </TextArea>
-                  <Label prefHeight="17.0" prefWidth="191.0" text="Julkaisupäivä: väärä julkaisupäivä" GridPane.columnSpan="2147483647" GridPane.rowIndex="8" />
+                  <Label fx:id="labelVirhe" prefHeight="17.0" prefWidth="191.0" text="Julkaisupäivä: väärä julkaisupäivä" GridPane.columnSpan="2147483647" GridPane.rowIndex="8" />
                </children>
             </GridPane>
          </content>
@@ -102,7 +102,7 @@
                   <Image url="@../../../../../../Downloads/stationtostation.jpg" />
                </image>
             </ImageView>
-            <Button mnemonicParsing="false" text="Valitse kuva">
+            <Button mnemonicParsing="false" onAction="#handleValitseKuva" text="Valitse kuva">
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </VBox.margin>

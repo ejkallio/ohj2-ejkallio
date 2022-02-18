@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import fi.jyu.mit.fxgui.ComboBoxChooser?>
 <?import fi.jyu.mit.fxgui.ListChooser?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -17,43 +18,34 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
 <BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxLP.LPGUIController">
-   <bottom>
-      <HBox spacing="10.0" BorderPane.alignment="CENTER">
-         <children>
-            <Button mnemonicParsing="false" text="Lisää levy" />
-            <Button mnemonicParsing="false" text="Tallenna" />
-         </children>
-         <padding>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-         </padding>
-      </HBox>
-   </bottom>
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
           <Menu mnemonicParsing="false" text="Tiedosto">
             <items>
-                  <MenuItem mnemonicParsing="false" text="Tallenna" />
-              <MenuItem mnemonicParsing="false" text="Sulje" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleAvaa" text="Avaa..." />
+                  <MenuItem mnemonicParsing="false" onAction="#handleTallenna" text="Tallenna" />
+              <MenuItem mnemonicParsing="false" onAction="#handleSulje" text="Sulje" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Muokkaa">
             <items>
-                  <MenuItem mnemonicParsing="false" text="Lisää levy" />
-              <MenuItem mnemonicParsing="false" text="Poista" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleLisaaLevy" text="Lisää levy" />
+              <MenuItem mnemonicParsing="false" onAction="#handlePoistaLevy" text="Poista" />
             </items>
           </Menu>
             <Menu mnemonicParsing="false" text="Siirry">
               <items>
-                <MenuItem mnemonicParsing="false" text="Kirjasto" />
-                  <MenuItem mnemonicParsing="false" text="Toivelista" />
+                <MenuItem mnemonicParsing="false" onAction="#handleSiirryKirjastoon" text="Kirjasto" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleSiirryToivelistaan" text="Toivelista" />
               </items>
             </Menu>
           <Menu mnemonicParsing="false" text="Apua">
             <items>
-              <MenuItem mnemonicParsing="false" text="Tietoja" />
+              <MenuItem mnemonicParsing="false" onAction="#handleNaytaTiedot" text="Tietoja" />
             </items>
           </Menu>
         </menus>
@@ -61,9 +53,6 @@
    </top>
    <left>
       <BorderPane BorderPane.alignment="CENTER">
-         <top>
-            <Label text="Haku" BorderPane.alignment="CENTER" />
-         </top>
          <bottom>
             <BorderPane prefWidth="200.0" BorderPane.alignment="CENTER">
                <center>
@@ -72,13 +61,19 @@
                <top>
                   <Label text="Levyt" BorderPane.alignment="CENTER" />
                </top>
-               <padding>
-                  <Insets top="10.0" />
-               </padding>
             </BorderPane>
          </bottom>
          <center>
-            <TextField text="Madv" BorderPane.alignment="TOP_CENTER" />
+            <VBox alignment="TOP_CENTER" prefWidth="100.0" spacing="5.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Label text="Haku" />
+                  <TextField fx:id="hakuehto" onAction="#handleHakuehto" />
+                  <ComboBoxChooser fx:id="cbKentat" onAction="#handleHakuehto" rivit="Levyn nimi&#10;Artistin nimi&#10;Levy-yhtiö&#10;JulkaisuvuosiJulkaisuvuosi" />
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </VBox>
          </center>
       </BorderPane>
    </left>
@@ -106,7 +101,7 @@
                         <Insets />
                      </GridPane.margin>
                   </Label>
-                  <TextField text="Madvillainy" GridPane.columnIndex="1" />
+                  <TextField editable="false" text="Madvillainy" GridPane.columnIndex="1" />
                   <Label text="Artisti" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets />
@@ -117,8 +112,8 @@
                         <Insets />
                      </GridPane.margin>
                   </Label>
-                  <TextField text="Madvillain" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <TextField text="23.3.2004" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <TextField editable="false" text="Madvillain" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <TextField editable="false" text="23.3.2004" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                   <Label text="Levy-yhtiö" GridPane.rowIndex="5">
                      <GridPane.margin>
                         <Insets />
@@ -129,14 +124,14 @@
                         <Insets />
                      </GridPane.margin>
                   </Label>
-                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <TextField text="LP" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <TextField editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <TextField editable="false" text="LP" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                   <Label text="Painoksen julkaisupäivä" GridPane.rowIndex="3" />
-                  <TextField text="Stones Throw" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                  <TextField text="Musta" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                  <TextField editable="false" text="Stones Throw" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <TextField editable="false" text="Musta" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                   <Label text="Vinyylin väri" GridPane.rowIndex="6" />
                   <Label text="Lisätietoja" GridPane.rowIndex="7" />
-                  <TextArea prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                  <TextArea editable="false" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
                      <GridPane.margin>
                         <Insets top="20.0" />
                      </GridPane.margin>
@@ -171,8 +166,8 @@
                <bottom>
                   <HBox spacing="10.0" BorderPane.alignment="CENTER">
                      <children>
-                        <Button mnemonicParsing="false" text="Lisää Genre" />
-                        <Button mnemonicParsing="false" text="Poista Genre" />
+                        <Button mnemonicParsing="false" onAction="#handleLisaaGenre" text="Lisää Genre" />
+                        <Button mnemonicParsing="false" onAction="#handlePoistaGenre" text="Poista Genre" />
                      </children>
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -183,4 +178,21 @@
          </bottom>
       </BorderPane>
    </right>
+   <bottom>
+      <VBox alignment="TOP_CENTER" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label fx:id="labelVirhe" alignment="CENTER" />
+            <HBox prefWidth="200.0" spacing="10.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#handleLisaaLevy" text="Lisää levy" />
+                  <Button mnemonicParsing="false" onAction="#handleMuokkaa" text="Muokkaa levyä" />
+                  <Button mnemonicParsing="false" onAction="#handleTallenna" text="Tallenna" />
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </HBox>
+         </children>
+      </VBox>
+   </bottom>
 </BorderPane>
