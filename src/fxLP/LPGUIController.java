@@ -44,7 +44,7 @@ public class LPGUIController {
     
 
     @FXML private void handleLisaaGenre() {
-        Dialogs.showMessageDialog("Ei osata vielä lisätä genrejä");
+        ModalController.showModal(LPGUIController.class.getResource("GenreDialogView.fxml"), "Genre", null, "");
     }
 
     @FXML private void handleLisaaLevy() {

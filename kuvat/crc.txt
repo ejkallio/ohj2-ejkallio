@@ -1,0 +1,160 @@
+CRC-kortit
+|------------------------------------------------------------------------|
+| Luokan nimi:   Albumi                              | Avustajat:        |
+|-------------------------------------------------------------------------
+| Vastuualueet:                                      |                   | 
+|                                                    |                   | 
+| (- ei tiedä kirjastosta, eikä käyttöliittymästä)   |                   | 
+| - tietää albumin kentät (nimi, artisti, etc...)    |                   | 
+| - osaa tarkistaa tietyn kentän oikeellisuuden      |                   |
+|   (syntaksin)                                      |                   | 
+| - osaa muuttaa 1|In Rainbows|..| - merkkijonon     |                   |
+|   albumin tiedoiksi                                |                   | 
+| - osaa antaa merkkijonona i:n kentän tiedot        |                   | 
+| - osaa laittaa merkkijonon i:neksi kentäksi        |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|-------------------------------------------------------------------------
+
+|------------------------------------------------------------------------|
+| Luokan nimi:   Genre                               | Avustajat:        |
+|-------------------------------------------------------------------------
+| Vastuualueet:                                      |                   | 
+|                                                    |                   | 
+| (- ei tiedä kirjastosta, eikä käyttöliittymästä)   |                   | 
+| - tietää genrejen kentät                           |                   |
+| - osaa tarkistaa tietyn kentän oikeellisuuden      |                   |
+|   (syntaksin)                                      |                   | 
+| - osaa muuttaa 1|Art rock| - merkkijonon           |                   |
+|   genren tiedoiksi                                 |                   | 
+| - osaa antaa merkkijonona i:n kentän tiedot        |                   | 
+| - osaa laittaa merkkijonon i:neksi kentäksi        |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|-------------------------------------------------------------------------
+
+|------------------------------------------------------------------------|
+| Luokan nimi:   Kirjasto                            | Avustajat:        |
+|-------------------------------------------------------------------------
+| Vastuualueet:                                      |                   | 
+|                                                    | - Albumit         | 
+| - huolehtii Albumit ja Genret - luokkien           | - Genret          | 
+|   välisestä yhteistyöstä ja välittää näitä tietoja | - Albumi          | 
+|   pyydettäessä                                     | - Genre           | 
+| - lukee ja kirjoittaa kirjaston                    |                   | 
+|   tiedostoon pyytämällä apua avustajiltaan         |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|-------------------------------------------------------------------------
+
+|------------------------------------------------------------------------|
+| Luokan nimi:   Albumit                             | Avustajat:        |
+|-------------------------------------------------------------------------
+| Vastuualueet:                                      |                   | 
+|                                                    | - Albumi          | 
+| - pitää yllä varsinaista albumikirjastoa, eli osaa |                   | 
+|   lisätä ja poistaa albumin                        |                   | 
+| - lukee ja kirjoittaa albumit tiedostoon           |                   | 
+| - osaa etsiä ja lajitella                          |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|-------------------------------------------------------------------------
+
+|------------------------------------------------------------------------|
+| Luokan nimi:   Genret                              | Avustajat:        |
+|-------------------------------------------------------------------------
+| Vastuualueet:                                      |                   | 
+|                                                    | - Genre           | 
+| - pitää yllä varsinaista genrerekisteriä, eli      |                   | 
+|   osaa lisätä ja poistaa genren                    |                   | 
+| - lukee ja kirjoittaa genret tiedostoon            |                   | 
+| - osaa etsiä ja lajitella                          |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|-------------------------------------------------------------------------
+
+|------------------------------------------------------------------------|
+| Luokan nimi:   Tags                                | Avustajat:        |
+|-------------------------------------------------------------------------
+| Vastuualueet:                                      |                   | 
+|                                                    | - Albumi          | 
+| - toimii ns. linkkinä genren ja albumin välillä    | - Genre           | 
+| - osaa lukea albumien ja genrejen tunnistenumerot  |                   | 
+|   ja linkittää ne yhteen kirjoittamalla omaan      |                   |
+|   tiedostoon                                       |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|-------------------------------------------------------------------------
+
+|------------------------------------------------------------------------|
+| Luokan nimi:   Tag                                 | Avustajat:        |
+|-------------------------------------------------------------------------
+| Vastuualueet:                                      |                   | 
+|                                                    | - Albumi          | 
+| - Linkittää genren ja albumin toisiinsa taulukossa | - Genre           | 
+| - osaa lukea albumien ja genrejen tunnistenumerot  |                   | 
+| - osaa antaa merkkijonona i:n kentän tiedot        |                   | 
+| - osaa laittaa merkkijonon i:neksi kentäksi        |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|-------------------------------------------------------------------------
+
+|------------------------------------------------------------------------|
+| Luokan nimi:   Naytto                              | Avustajat:        |
+|-------------------------------------------------------------------------
+| Vastuualueet:                                      |                   | 
+|                                                    | - Kirjasto        | 
+| - hoitaa kaiken näyttöön tulevan tekstin           | - Albumi          | 
+| - hoitaa kaiken tiedon pyytämisen käyttäjältä      | - Genre           | 
+| (- ei tiedä kirjaston eikä albumin yksityiskohtia) |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|                                                    |                   | 
+|-------------------------------------------------------------------------
