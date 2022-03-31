@@ -1,10 +1,12 @@
 package fxLP;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.fxml.FXMLLoader;
+import LP.Kirjasto;
 import fi.jyu.mit.fxgui.ListChooser;
 
 /**
@@ -16,14 +18,24 @@ public class LPMain extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            FXMLLoader ldr = new FXMLLoader(getClass().getResource("LPGUIView.fxml"));
-            final Pane root = ldr.load();
-            //final LPGUIController lpCtrl = (LPGUIController) ldr.getController();
-            Scene scene = new Scene(root);
+            final FXMLLoader ldr = new FXMLLoader(getClass().getResource("LPGUIView.fxml"));
+            final Pane root = (Pane)ldr.load();
+            final LPGUIController lpCtrl = (LPGUIController) ldr.getController();
+            
+            final Scene scene = new Scene(root);
             scene.getStylesheets().add(getClass().getResource("lp.css").toExternalForm());
             primaryStage.setScene(scene);
             primaryStage.setTitle("LP");
-            primaryStage.show();
+            
+            primaryStage.setOnCloseRequest((event) -> {
+                if ( !lpCtrl.voikoSulkea() ) event.consume();
+                });
+            
+            Kirjasto kirjasto = new Kirjasto();
+            lpCtrl.setKirjasto(kirjasto);
+                    
+            primaryStage.show();           
+            if ( !lpCtrl.avaa() ) Platform.exit();
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -32,7 +44,7 @@ public class LPMain extends Application {
     /**
      * @param args Ei käytössä
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) {               
         launch(args);
     }
 }

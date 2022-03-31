@@ -46,6 +46,7 @@
           <Menu mnemonicParsing="false" text="Apua">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#handleNaytaTiedot" text="Tietoja" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleApua" text="Apua" />
             </items>
           </Menu>
         </menus>
@@ -56,7 +57,7 @@
          <bottom>
             <BorderPane prefWidth="200.0" BorderPane.alignment="CENTER">
                <center>
-                  <ListChooser rivit="Madvillain - Madvillainy&#10;" BorderPane.alignment="CENTER" />
+                  <ListChooser fx:id="chooserLevyt" rivit="Madvillain - Madvillainy&#10;" BorderPane.alignment="CENTER" />
                </center>
                <top>
                   <Label text="Levyt" BorderPane.alignment="CENTER" />
@@ -78,7 +79,7 @@
       </BorderPane>
    </left>
    <center>
-      <ScrollPane fitToWidth="true" minWidth="300.0" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <ScrollPane fx:id="panelLevy" fitToWidth="true" minWidth="300.0" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <content>
             <GridPane hgap="10.0">
               <columnConstraints>
