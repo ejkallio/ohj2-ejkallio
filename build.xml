@@ -18,6 +18,9 @@
             <zipfileset excludes="META-INF/*.SF" src="/Users/Kivikallio/devel/jar/fxgui.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="/Users/Kivikallio/devel/jar/Graphics.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="/Users/Kivikallio/devel/jar/Music.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/Kivikallio/.p2/pool/plugins/org.opentest4j_1.2.0.v20211018-1956.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/Kivikallio/.p2/pool/plugins/org.apiguardian_1.1.2.v20211018-1956.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/Kivikallio/.p2/pool/plugins/org.hamcrest.core_1.3.0.v20180420-1519.jar"/>
         </jar>
     </target>
 </project>

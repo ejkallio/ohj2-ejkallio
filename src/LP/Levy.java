@@ -1,6 +1,7 @@
 package LP;
 
 import java.io.*;
+import fi.jyu.mit.ohj2.Mjonot;
 
 
 /**
@@ -99,6 +100,84 @@ public class Levy {
      * @return levyn id
      */
     public int getIdNro() {
+        return idNro;
+    }
+    
+    
+    /**
+     * Asettaa idnumeron ja samalla varmistaa että 
+     * seuraava numero on aina suurempi kuin tähän mennessä suurin.
+     * @param nr asetettava idnro
+     */
+    private void setIdNro(int nr) {
+        idNro = nr;
+        if (idNro >= seuraavaNro) seuraavaNro = idNro + 1;
+    }
+    
+    
+    /**
+     * Palauttaa levyn tiedot merkkijonona jonka voi tallentaa tiedostoon.
+     * @return levy tolppaeroteltuna merkkijonona.
+     * @example
+     * <pre name="test">
+     * Levy levy = new Levy();
+     * levy.parse(" 1 | In Rainbows | Radiohead");
+     * levy.toString().startsWith("1|In Rainbows|Radiohead|") === true;
+     * </pre>
+     */
+    @Override
+    public String toString() {
+        return "" + 
+                getIdNro() + "|" +
+                levynNimi + "|" + 
+                artisti + "|" + 
+                julkaisuPaiva + "|" +
+                levyYhtio + "|" +
+                formaatti + "|" + 
+                levynVari + "|" + 
+                lisatietoja;
+    }
+    
+    
+    /**
+     * Selvittää levyn tiedot merkillä | erotellusta merkkijonosta
+     * Pitää huolen että seuraavaNro on suurempi kuin tuleva idNro.
+     * @param rivi josta levyn tiedot otetaan
+     * @example
+     * <pre name="test">
+     * Levy levy = new Levy();
+     * levy.parse(" 1 | In Rainbows | Radiohead");
+     * levy.toString().startsWith("1|In Rainbows|Radiohead|") === true;     
+     * 
+     * levy.rekisteroi();
+     * int n = levy.getIdNro();
+     * levy.parse(""+(n+20));
+     * levy.rekisteroi();
+     * levy.getIdNro() === n+20+1;
+     * * </pre>
+     */
+    public void parse(String rivi) {
+        StringBuffer sb = new StringBuffer(rivi);
+        setIdNro(Mjonot.erota(sb, '|', getIdNro()));
+        levynNimi = Mjonot.erota(sb, '|', levynNimi);
+        artisti = Mjonot.erota(sb, '|', artisti);
+        julkaisuPaiva = Mjonot.erota(sb, '|', julkaisuPaiva);
+        levyYhtio = Mjonot.erota(sb, '|', levyYhtio);
+        formaatti = Mjonot.erota(sb, '|', formaatti);
+        levynVari = Mjonot.erota(sb, '|', levynVari);
+        lisatietoja = Mjonot.erota(sb, '|', lisatietoja);
+    }
+    
+    
+    @Override
+    public boolean equals(Object levy) {
+        if (levy == null) return false;
+        return this.toString().equals(levy.toString());
+    }
+    
+    
+    @Override
+    public int hashCode() {
         return idNro;
     }
     

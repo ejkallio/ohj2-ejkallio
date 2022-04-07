@@ -1,5 +1,12 @@
 package LP;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 
 
@@ -12,8 +19,9 @@ import java.util.*;
  */
 public class Genret implements Iterable<Genre> {
     
-    private String tiedostonNimi = "";
-    
+    // private String tiedostonNimi = "";
+    private boolean muutettu = false;
+    private String tiedostonPerusNimi = "";
     
     private final Collection<Genre> alkiot = new ArrayList<Genre>();
     
@@ -32,27 +40,108 @@ public class Genret implements Iterable<Genre> {
      */
     public void lisaa(Genre gen) {
         alkiot.add(gen);
+        muutettu = true;
     }
     
     
     /**
-     * Lukee levykirjaston tiedostosta. KESKEN
-     * @param hakemisto tiedoston hakemisto
+     * Lukee levykirjaston tiedostosta. 
+     * @param tied tiedoston hakemisto
      * @throws SailoException jos lukeminen epäonnistuu
+     * @example
+     * <pre name="test">
+     * #THROWS SailoException
+     * #import java.io.File;
+     *  Genret genret = new Genret();
+     *  Genre gen1 = new Genre(); gen1.defaultGenre(1);
+     *  Genre gen2 = new Genre(); gen2.defaultGenre(2);
+     *  Genre gen3 = new Genre(); gen3.defaultGenre(3);
+     *  Genre gen4 = new Genre(); gen4.defaultGenre(4);
+     *  Genre gen5 = new Genre(); gen5.defaultGenre(5);
+     *  String tiedNimi = "testikelmit";
+     *  File ftied = new File(tiedNimi+".dat");
+     *  ftied.delete();
+     *  genret.lueTiedostosta(tiedNimi); #THROWS SailoException
+     *  genret.lisaa(gen1);
+     *  genret.lisaa(gen2);
+     *  genret.lisaa(gen3);
+     *  genret.lisaa(gen4);
+     *  genret.lisaa(gen5);
+     *  genret.tallenna();
+     *  genret = new Genret();
+     *  genret.lueTiedostosta(tiedNimi);
+     *  Iterator<Genre> i = genret.iterator();
+     *  i.next().toString() === gen1.toString();
+     *  i.next().toString() === gen2.toString();
+     *  i.next().toString() === gen3.toString();
+     *  i.next().toString() === gen4.toString();
+     *  i.next().toString() === gen5.toString();
+     *  i.hasNext() === false;
+     *  genret.lisaa(gen5);
+     *  genret.tallenna();
+     *  ftied.delete() === true;
+     *  File fbak = new File(tiedNimi+".bak");
+     *  fbak.delete() === true;
+     * </pre>
      */
-    public void lueTiedostosta(String hakemisto) throws SailoException {
-        tiedostonNimi = hakemisto + ".har";
-        throw new SailoException("Ei osata vielä lukea tiedostoa" + tiedostonNimi);
+    public void lueTiedostosta(String tied) throws SailoException {
+        setTiedostonPerusNimi(tied);
+        try ( BufferedReader fi = new BufferedReader(new FileReader(getTiedostonNimi())) ) {
+            
+            String rivi;
+            while ( (rivi = fi.readLine()) != null ) {
+                rivi = rivi.trim();
+                if ("".equals(rivi) || rivi.charAt(0) == ';' ) continue;
+                Genre gen = new Genre();
+                gen.parse(rivi);
+                lisaa(gen);
+            }
+            muutettu = false;
+        } catch (FileNotFoundException e) {
+            throw new SailoException("Tiedosto " + getTiedostonNimi() + " ei aukea");
+        } catch (IOException e) {
+            throw new SailoException("Ongelmia tiedoston kanssa: " + e.getMessage());
+        }
     }
     
     
     /**
-     * Tallentaa levykirjaston tiedostoon. KESKEN
+     * Luetaan aikaisemmin annettu tiedosto
+     * @throws SailoException jos tulee poikkeus
+     */
+    public void lueTiedostosta() throws SailoException {
+        lueTiedostosta(getTiedostonPerusNimi());
+    }
+    
+    
+    /**
+     * Tallentaa levykirjaston tiedostoon. 
      * @throws SailoException jos talletus epäonnistuu
      */
-    public void talleta() throws SailoException {
-        throw new SailoException("Ei osata vielä tallettaa tiedostoa " + tiedostonNimi);
+    public void tallenna() throws SailoException {
+        if (!muutettu) return;
+        
+        File fbak = new File(getBakNimi());
+        File ftied = new File(getTiedostonNimi());
+        fbak.delete(); // if ... System.err.println("Ei voi tuhota");
+        ftied.renameTo(fbak); // if ... System.err.println("Ei voi nimetä");
+        
+        try (PrintWriter fo = new PrintWriter(new FileWriter(ftied.getCanonicalPath())) ) {
+            for (Genre gen : this) {
+                fo.println(gen.toString());
+            }
+        } catch (FileNotFoundException ex ) {
+            throw new SailoException("Tiedosto " + ftied.getName() + " ei aukea");
+        } catch (IOException ex) {
+            throw new SailoException("Tiedoston " + ftied.getName() + "kirjoittamisessa ongelmia");
+        }
+            
+            
+        muutettu = false;
     }
+    
+    
+    
     
     
     /**
@@ -101,6 +190,42 @@ public class Genret implements Iterable<Genre> {
     @Override
     public Iterator<Genre> iterator() {
         return alkiot.iterator();
+    }
+    
+    
+    /**
+     * Asettaa tiedoston perusnimen ilman tarkenninta
+     * @param tied tallennustiedoston perusnimi
+     */
+    public void setTiedostonPerusNimi(String tied) {
+        tiedostonPerusNimi = tied;
+    }
+    
+    
+    /**
+     * Palauttaa tiedoston nimen, jota käytetään tallennukseen
+     * @return tallennustiedoston nimi
+     */
+    public String getTiedostonPerusNimi() {
+        return tiedostonPerusNimi;
+    }
+    
+    
+    /**
+     * Palauttaa tiedoston nimen, jota käytetään tallennukseen
+     * @return tallennustiedoston nimi
+     */
+    public String getTiedostonNimi() {
+        return tiedostonPerusNimi + ".dat";
+    }
+    
+    
+    /**
+     * Palauttaa varakopiotiedoston nimen
+     * @return varakopiotiedoston nimi
+     */
+    public String getBakNimi() {
+        return tiedostonPerusNimi + ".bak";
     }
     
     

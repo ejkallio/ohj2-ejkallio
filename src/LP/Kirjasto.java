@@ -1,5 +1,6 @@
 package LP;
 
+import java.io.File;
 import java.util.*;
 
 
@@ -11,8 +12,8 @@ import java.util.*;
  *
  */
 public class Kirjasto {
-    private final Levyt levyt = new Levyt();
-    private final Genret genret = new Genret();
+    private Levyt levyt = new Levyt();
+    private Genret genret = new Genret();
     
     /**
      * 
@@ -42,24 +43,31 @@ public class Kirjasto {
      * #THROWS SailoException
      * Kirjasto kirjasto = new Kirjasto();
      * Levy levy1 = new Levy(), levy2 = new Levy();
-     * levy1.rekisteroi(); levy2.rekisteroi();
-     * kirjasto.getLevyja() === 0;
-     * kirjasto.lisaa(levy1); kirjasto.getLevyja() === 1;
-     * kirjasto.lisaa(levy2); kirjasto.getLevyja() === 2;
-     * kirjasto.lisaa(levy1); kirjasto.getLevyja() === 3;
-     * kirjasto.getLevyja() === 3;
-     * kirjasto.annaLevy(0) === levy1;
-     * kirjasto.annaLevy(1) === levy2;
-     * kirjasto.annaLevy(2) === levy1;
-     * kirjasto.annaLevy(3) === levy1; #THROWS IndexOutOfBoundsException
-     * kirjasto.lisaa(levy1); kirjasto.getLevyja() === 4;
-     * kirjasto.lisaa(levy1); kirjasto.getLevyja() === 5;
-     * kirjasto.lisaa(levy1); #THROWS SailoException
+     * kirjasto.lisaa(levy1);
+     * kirjasto.lisaa(levy2);
+     * kirjasto.lisaa(levy1);
+     * Collection<Levy> loytyneet = kirjasto.etsi("",-1);
+     * Iterator<Levy> it = loytyneet.iterator();
+     * it.next() === levy1;
+     * it.next() === levy2;
+     * it.next() === levy1;
      * </pre>
      */
     public void lisaa(Levy levy) throws SailoException {
         levyt.lisaa(levy);
     }
+    
+    
+    
+    /**
+     * Lisää uuden genren kirjastoon
+     * @param gen lisättävä genre
+     * @throws SailoException jos tulee ongelmia
+     */
+    public void lisaa(Genre gen) throws SailoException {
+        genret.lisaa(gen);
+    }
+    
     
     
     /**
@@ -74,32 +82,14 @@ public class Kirjasto {
     
     
     /**
-     * Lukee kirjaston tiedot tiedostosta
-     * @param nimi nimi jota käytetään lukemisessa
-     * @throws SailoException jos lukeminen epäonnistuu
+     * Palauttaa "taulukossa" hakuehtoon vastaavien levyjen viitteet
+     * @param hakuehto hakuehto
+     * @param k etsittävän kentän indeksi
+     * @return tietorakenteen löytyneistä jäsenistä
+     * @throws SailoException jos jotakin menee väärin
      */
-    public void lueTiedostosta(String nimi) throws SailoException {
-        levyt.lueTiedostosta(nimi);
-        genret.lueTiedostosta(nimi);
-    }
-    
-    
-    /**
-     * Tallettaa kerhon tiedot tiedostoon
-     * @throws SailoException jos tallettamisessa ongelmia
-     */
-    public void talleta() throws SailoException {
-        levyt.talleta();
-        genret.talleta();
-    }
-    
-    
-    /**
-     * Lisää uuden genren kirjastoon
-     * @param gen lisättävä genre
-     */
-    public void lisaa(Genre gen) {
-        genret.lisaa(gen);
+    public Collection<Levy> etsi(String hakuehto, int k) throws SailoException {
+        return levyt.etsi(hakuehto, k);
     }
     
     
@@ -107,8 +97,10 @@ public class Kirjasto {
      * Haetaan kaikki levyn genret
      * @param levy levy jolle genrejä haetaan
      * @return tietorakenne jossa viitteet löydettyihin genreihin
+     * @throws SailoException jos jotakin menee väärin
      * @example
      * <pre name="test">
+     * #THROWS SailoException
      * #import java.util.*;
      * 
      * Kirjasto kirjasto = new Kirjasto();
@@ -134,9 +126,121 @@ public class Kirjasto {
      * loytyneet.get(0) == gen3 === true;
      * </pre>
      */
-    public List<Genre> annaGenret(Levy levy) {
+    public List<Genre> annaGenret(Levy levy)  throws SailoException{
         return genret.annaGenret(levy.getIdNro());
     }
+    
+    
+    /**
+     * Asettaa tiedostojen perusnimet
+     * @param nimi uusi nimi
+     */
+    public void setTiedosto(String nimi) {
+        File dir = new File(nimi);
+        dir.mkdirs();
+        String hakemistonNimi = "";
+        if (!nimi.isEmpty()) hakemistonNimi = nimi + "/";
+        levyt.setTiedostonPerusNimi(hakemistonNimi + "levyt");
+        genret.setTiedostonPerusNimi(hakemistonNimi + "genret");
+    }
+    
+    
+    /**
+     * Lukee kirjaston tiedot tiedostosta
+     * @param nimi nimi jota käytetään lukemisessa
+     * @throws SailoException jos lukeminen epäonnistuu
+     * @example
+     * <pre name="test">
+     * #THROWS SailoException
+     * #import java.io.*;
+     * #import java.util.*;
+     * 
+     * Kirjasto kirjasto = new Kirjasto();
+     * 
+     * Levy levy1 = new Levy(); levy1.defaultLevy(); levy1.rekisteroi();
+     * Levy levy2 = new Levy(); levy2.defaultLevy(); levy2.rekisteroi();
+     * Genre gen1 = new Genre(); gen1.defaultGenre(levy2.getIdNro());
+     * Genre gen2 = new Genre(); gen2.defaultGenre(levy1.getIdNro());
+     * Genre gen3 = new Genre(); gen3.defaultGenre(levy2.getIdNro());
+     * Genre gen4 = new Genre(); gen4.defaultGenre(levy1.getIdNro());
+     * Genre gen5 = new Genre(); gen5.defaultGenre(levy2.getIdNro());
+     * 
+     * String hakemisto = "testikirjasto";
+     * File dir = new File(hakemisto);
+     * File ftied = new File(hakemisto+"/levyt.dat");
+     * File fhtied = new File(hakemisto+"/genret.dat");
+     * dir.mkdir();
+     * ftied.delete();
+     * fhtied.delete();
+     * kirjasto.lueTiedostosta(hakemisto); #THROWS SailoException
+     * kirjasto.lisaa(levy1);
+     * kirjasto.lisaa(levy2);
+     * kirjasto.lisaa(gen1);
+     * kirjasto.lisaa(gen2);
+     * kirjasto.lisaa(gen3);
+     * kirjasto.lisaa(gen4);
+     * kirjasto.lisaa(gen5);
+     * kirjasto.tallenna();
+     * kirjasto = new Kirjasto();
+     * kirjasto.lueTiedostosta(hakemisto);
+     * Collection<Levy> kaikki = kirjasto.etsi("",-1);
+     * Iterator<Levy> it = kaikki.iterator();
+     * it.next() === levy1;
+     * it.next() === levy2;
+     * it.hasNext() === false;
+     * List<Genre> loytyneet = kirjasto.annaGenret(levy1);
+     * Iterator<Genre> ih = loytyneet.iterator();
+     * ih.next() === gen2;
+     * ih.next() === gen4;
+     * ih.hasNext() === false;
+     * loytyneet = kirjasto.annaGenret(levy2);
+     * ih = loytyneet.iterator();
+     * ih.next() === gen1;
+     * ih.next() === gen3;
+     * ih.next() === gen5;
+     * ih.hasNext() === false;
+     * kirjasto.lisaa(levy2);
+     * kirjasto.lisaa(gen5);
+     * kirjasto.tallenna();
+     * ftied.delete() === true;
+     * fhtied.delete() === true;
+     * File fbak = new File(hakemisto+"/levyt.bak");
+     * File fhbak = new File(hakemisto+"/genret.bak");
+     * fbak.delete() === true;
+     * fhbak.delete() === true;
+     * dir.delete() === true;
+     * </pre>
+     */
+    public void lueTiedostosta(String nimi) throws SailoException {
+        levyt = new Levyt();
+        genret = new Genret();
+        
+        setTiedosto(nimi);
+        levyt.lueTiedostosta();
+        genret.lueTiedostosta();
+    }
+    
+    
+    /**
+     * Tallettaa kerhon tiedot tiedostoon
+     * @throws SailoException jos tallettamisessa ongelmia
+     */
+    public void tallenna() throws SailoException {
+        String virhe = "";
+        try {
+            levyt.tallenna();
+        } catch (SailoException ex) {
+            virhe = ex.getMessage();
+        }
+        
+        try {
+            genret.tallenna();
+        } catch (SailoException ex) {
+            virhe += ex.getMessage();
+        }
+        if (!"".equals(virhe)) throw new SailoException(virhe);
+    }
+
     
     
     /**
@@ -147,8 +251,6 @@ public class Kirjasto {
         Kirjasto kirjasto = new Kirjasto();
         
         try {
-            
-            
             Levy rh1 = new Levy(), rh2 = new Levy();
             rh1.rekisteroi();
             rh1.defaultLevy();
@@ -167,14 +269,15 @@ public class Kirjasto {
             
             System.out.println("============ Kirjaston testi ============");
 
-             
-            for (int i = 0; i < kirjasto.getLevyja(); i++) {
-                Levy levy = kirjasto.annaLevy(i);
+            Collection<Levy> levyt = kirjasto.etsi("", -1);
+            int i = 0;
+            for (Levy levy : levyt) {
                 System.out.println("Jäsen paikassa: " + i);
                 levy.tulosta(System.out);
                 List<Genre> loytyneet = kirjasto.annaGenret(levy);
                 for (Genre genre : loytyneet)
                     genre.tulosta(System.out);
+                i++;
             }
             
         } catch (SailoException ex) {

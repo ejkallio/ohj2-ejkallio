@@ -1,5 +1,8 @@
 package LP;
 
+import java.io.*;
+import java.util.*;
+
 
 /**
  * Kirjaston levyt, joka osaa mm. lisätä uuden levyn
@@ -7,11 +10,13 @@ package LP;
  * @version 31.3.2022
  *
  */
-public class Levyt {
+public class Levyt implements Iterable<Levy> {
     public static final int MAX_LEVYJA    = 5;
-    private int             lkm           = 0;
-    private String          tiedostonNimi = "";
-    private Levy           alkiot[]      = new Levy[MAX_LEVYJA];
+    private boolean muutettu = false;
+    private int lkm = 0;
+    private String kokoNimi = "";
+    private String tiedostonPerusNimi = "nimet";
+    private Levy alkiot[] = new Levy[MAX_LEVYJA];
     
     
     /**
@@ -47,9 +52,18 @@ public class Levyt {
      * </pre>
      */
     public void lisaa(Levy levy) throws SailoException {
-        if (lkm >= alkiot.length) throw new SailoException("Liikaa alkioita");
+        if (lkm >= alkiot.length) {
+            //throw new SailoException("Liikaa alkioita");
+            int koko = alkiot.length + 10;
+            Levy alkiot2[] = new Levy[koko];
+            for(int i = 0; i < alkiot.length; i++) {
+                alkiot2[i] = alkiot[i];
+            }
+            alkiot = alkiot2;
+        }
         alkiot[lkm] = levy;
         lkm++;
+        muutettu = true;
     }
     
     
@@ -60,20 +74,76 @@ public class Levyt {
      * @throws IndexOutOfBoundsException jos i ei ole sallitulla alueella
      */
     public Levy anna(int i) throws IndexOutOfBoundsException {
-        if (i < 0 || lkm <= i)
-            throw new IndexOutOfBoundsException("Laiton indeksi: " + i);
+        if (i < 0 || lkm <= i) throw new IndexOutOfBoundsException("Laiton indeksi: " + i);
         return alkiot[i];
     }
     
     
     /**
      * Lukee kirjaston tiedostosta, kesken
-     * @param hakemisto tiedoston hakemisto
+     * @param tied tiedoston hakemisto
      * @throws SailoException jos lukeminen epäonnistuu
+     * @example
+     * <pre name="test">
+     * #THROWS SailoException
+     * #import java.io.File;
+     * 
+     * Levyt levyt = new Levyt();
+     * Levy levy1 = new Levy(), levy2 = new Levy();
+     * levy1.defaultLevy();
+     * levy2.defaultLevy();
+     * String hakemisto = "testielias";
+     * String tiedNimi = hakemisto + "/levyt";
+     * File ftied = new File(tiedNimi+".dat");
+     * File dir = new File(hakemisto);
+     * dir.mkdir();
+     * ftied.delete();
+     * levyt.lueTiedostosta(tiedNimi); #THROWS SailoException
+     * levyt.lisaa(levy1);
+     * levyt.lisaa(levy2);
+     * levyt.tallenna();
+     * levyt = new Levyt();
+     * levyt.lueTiedostosta(tiedNimi);
+     * Iterator<Levy> i = levyt.iterator();
+     * i.next() === levy1;
+     * i.next() === levy2;
+     * i.hasNext() === false;
+     * levyt.lisaa(levy2);
+     * levyt.tallenna();
+     * ftied.delete() === true;
+     * File fbak = new File(tiedNimi+".bak");
+     * fbak.delete() === true;
+     * dir.delete() === true;
+     * </pre>
      */
-    public void lueTiedostosta(String hakemisto) throws SailoException {
-        tiedostonNimi = hakemisto + "/albumit.dat";
-        throw new SailoException("Ei osata vielä lukea tiedostoa " + tiedostonNimi);
+    public void lueTiedostosta(String tied) throws SailoException {
+        setTiedostonPerusNimi(tied);
+        try (BufferedReader fi = new BufferedReader(new FileReader(getTiedostonNimi()))) {
+            kokoNimi = fi.readLine();
+            if (kokoNimi == null) throw new SailoException("Kirjaston nimi puuttuu");
+            String rivi = fi.readLine();
+            if (rivi == null) throw new SailoException("Maksimikoko puuttuu");
+            //int maxKoko = Mjonot.erotaInt(rivi,10); // tehdään jotakin
+            
+            while ((rivi = fi.readLine()) != null) {
+                rivi = rivi.trim();
+                if ("".equals(rivi) || rivi.charAt(0) == ';') continue;
+                Levy levy = new Levy();
+                levy.parse(rivi);
+                lisaa(levy);
+            }
+            muutettu = false;
+            
+        } catch (FileNotFoundException e) {
+            throw new SailoException("Tiedosto " + getTiedostonNimi() + " ei aukea");
+        } catch (IOException e) {
+            throw new SailoException("Ongelmia tiedoston kanssa: " + e.getMessage());
+        }
+    }
+    
+    
+    public void lueTiedostosta() throws SailoException {
+        lueTiedostosta(getTiedostonPerusNimi());
     }
     
     
@@ -81,8 +151,35 @@ public class Levyt {
      * Tallentaa kirjaston tiedostoon, kesken
      * @throws SailoException jos talletus epäonnistuu
      */
-    public void talleta() throws SailoException {
-         throw new SailoException("Ei osata vielä tallettaa tiedostoa " + tiedostonNimi);
+    public void tallenna() throws SailoException {
+         if (!muutettu) return;
+         
+         File fbak = new File(getBakNimi());
+         File ftied = new File(getTiedostonNimi());
+         fbak.delete(); // if ... System.err.println("Ei voi tuhota")
+         ftied.renameTo(fbak); //if ... System.err.println("Ei voi nimetä");
+         
+         try (PrintWriter fo = new PrintWriter(new FileWriter(ftied.getCanonicalPath()))) {
+             fo.println(getKokoNimi());
+             fo.println(alkiot.length);
+             for (Levy levy : this) {
+                 fo.println(levy.toString());
+             }
+             
+             
+         } catch (FileNotFoundException ex) {
+             throw new SailoException("Tiedosto " + ftied.getName() + " ei aukea");
+         } catch (IOException ex) {
+             throw new SailoException("Tiedoston " + ftied.getName() + " kirjoittamisessa ongelmia");
+         }
+         
+         
+         muutettu = false;
+    }
+    
+    
+    public String getKokoNimi() {
+        return kokoNimi;
     }
     
     
@@ -92,6 +189,66 @@ public class Levyt {
      */
     public int getLkm() {
         return lkm;
+    }
+    
+    
+    public String getTiedostonPerusNimi() {
+        return tiedostonPerusNimi;
+    }
+    
+    
+    public void setTiedostonPerusNimi(String nimi) {
+        tiedostonPerusNimi = nimi;
+    }
+    
+    
+    public String getTiedostonNimi() {
+        return getTiedostonPerusNimi() + ".dat";
+    }
+    
+    
+    public String getBakNimi() {
+        return tiedostonPerusNimi + ".bak";
+    }
+    
+    
+    public class LevytIterator implements Iterator<Levy> {
+        private int kohdalla = 0;
+        
+        
+        @Override
+        public boolean hasNext() {
+            return kohdalla < getLkm();
+        }
+        
+        
+        @Override
+        public Levy next() throws NoSuchElementException {
+            if (!hasNext()) throw new NoSuchElementException("Ei oo");
+            return anna(kohdalla++);
+        }
+        
+        
+        @Override 
+        public void remove() throws UnsupportedOperationException {
+            throw new UnsupportedOperationException("Me ei poisteta");
+        }
+    }
+    
+    
+    @Override
+    public Iterator<Levy> iterator() {
+        return new LevytIterator();
+    }
+    
+    
+    @SuppressWarnings("unused")
+    public Collection<Levy> etsi(String hakuehto, int k) {
+        Collection<Levy> loytyneet = new ArrayList<Levy>();
+        for(Levy levy : this) {
+            loytyneet.add(levy);
+        }
+        return loytyneet;
     }
     
     

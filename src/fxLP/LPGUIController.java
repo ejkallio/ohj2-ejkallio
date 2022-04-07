@@ -11,6 +11,7 @@ import java.io.PrintStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -48,7 +49,6 @@ public class LPGUIController implements Initializable {
     
     @FXML private ListChooser<Levy> chooserLevyt;
     
-    private String kirjastonnimi = "Elias";
     
     
     @Override
@@ -58,12 +58,14 @@ public class LPGUIController implements Initializable {
     
     
     @FXML private void handleHakuehto() {
-        String hakukentta = cbKentat.getSelectedText();
-        String ehto = hakuehto.getText();
-        if ( ehto.isEmpty() )
-            naytaVirhe(null);
-        else
-            naytaVirhe("Ei osata vielä hakea " + hakukentta + ": " + ehto);
+        //String hakukentta = cbKentat.getSelectedText();
+        //String ehto = hakuehto.getText();
+        //if ( ehto.isEmpty() )
+        //    naytaVirhe(null);
+        //else
+        //    naytaVirhe("Ei osata vielä hakea " + hakukentta + ": " + ehto);
+        if (levyKohdalla != null)
+            hae(levyKohdalla.getIdNro());
     }
     
     
@@ -120,7 +122,7 @@ public class LPGUIController implements Initializable {
     }
     
     
-    
+    private String kirjastonnimi = "Elias";
     private Kirjasto kirjasto;
     private Levy levyKohdalla;
     private TextArea areaLevy = new TextArea();
@@ -141,9 +143,16 @@ public class LPGUIController implements Initializable {
     
     /**
      * Muutosten tallennus
+     * @return null jos onnistuu, muuten virhe tekstinä
      */
-    private void tallenna() {
-        Dialogs.showMessageDialog("Ei osata tallentaa vielä");
+    private String tallenna() {
+        try {
+            kirjasto.tallenna();
+            return null;
+        } catch (SailoException ex) {
+            Dialogs.showMessageDialog("Tallennuksessa ongelmia! " + ex.getMessage());
+            return ex.getMessage();
+        }
     }
     
     
@@ -177,12 +186,24 @@ public class LPGUIController implements Initializable {
     }
     
     
-    protected void lueTiedosto(String nimi) {
+    /**
+     * Alustaa kirjaston lukemalla sen valitun nimisestä tiedostosta
+     * @param nimi tiedosto josta kirjaston tiedot luetaan
+     * @return null jos onnistuu, muuten virhe tekstinä
+     */
+    protected String lueTiedosto(String nimi) {
         kirjastonnimi = nimi;
         setTitle("Kirjasto -" + kirjastonnimi);
-        String virhe = "Ei osata lukea vielä";
-        // if (virhe != null)
-            Dialogs.showMessageDialog(virhe);
+        try {
+            kirjasto.lueTiedostosta(nimi);
+            hae(0);
+            return null;
+        } catch (SailoException e) {
+            hae(0);
+            String virhe = e.getMessage();
+            if (virhe != null) Dialogs.showMessageDialog(virhe);
+            return virhe;
+        }
     }
     
     
@@ -196,13 +217,27 @@ public class LPGUIController implements Initializable {
      * @param jnro levyn numero, joka aktivoidaan haun jälkeen
      */
     protected void hae(int jnro) {
+        int k = cbKentat.getSelectionModel().getSelectedIndex();
+        String ehto = hakuehto.getText();
+        if(k > 0 || ehto.length() > 0)
+            naytaVirhe(String.format("ei osata hakea (kenttä: %d, ehto: %s)", k, ehto));
+        else 
+            naytaVirhe(null);
+        
         chooserLevyt.clear();
         
         int index = 0;
-        for(int i = 0; i < kirjasto.getLevyja(); i++) {
-            Levy levy = kirjasto.annaLevy(i);
-            if(levy.getIdNro() == jnro) index = i;
-            chooserLevyt.add(levy.getNimi(), levy);
+        Collection<Levy> levyt;
+        try {
+            levyt = kirjasto.etsi(ehto, k);
+            int i = 0;
+            for (Levy levy:levyt) {
+                if (levy.getIdNro() == jnro) index = i;
+                chooserLevyt.add(levy.getNimi(), levy);
+                i++;
+            }
+        }catch (SailoException ex) {
+            Dialogs.showMessageDialog("Levyn hakemisessa ongelmia! " + ex.getMessage());
         }
         chooserLevyt.setSelectedIndex(index); // muutosviesti joka näyttää levyn
     }
@@ -235,7 +270,11 @@ public class LPGUIController implements Initializable {
         Genre gen = new Genre();
         gen.rekisteroi();
         gen.defaultGenre(levyKohdalla.getIdNro());
-        kirjasto.lisaa(gen);
+        try {
+            kirjasto.lisaa(gen);
+        } catch (SailoException e) {
+            Dialogs.showMessageDialog("Ongelmia lisäämisessä! " + e.getMessage());
+        }
         hae(levyKohdalla.getIdNro());
     }
     
@@ -255,7 +294,10 @@ public class LPGUIController implements Initializable {
     protected void naytaLevy() {
         levyKohdalla = chooserLevyt.getSelectedObject();
         
-        if (levyKohdalla == null) return;
+        if (levyKohdalla == null) {
+            areaLevy.clear();
+            return;
+        }
         
         areaLevy.setText("");
         try (PrintStream os = TextAreaOutputStream.getTextPrintStream(areaLevy)) {
@@ -281,9 +323,28 @@ public class LPGUIController implements Initializable {
         os.println("--------------------------------------------");
         levy.tulosta(os);
         os.println("--------------------------------------------");
-        List<Genre> genret = kirjasto.annaGenret(levy);
-        for (Genre gen:genret)
-            gen.tulosta(os);
+        try {
+            List<Genre> genret = kirjasto.annaGenret(levy);
+            for (Genre gen:genret)
+                gen.tulosta(os);
+        } catch (SailoException ex) {
+            Dialogs.showMessageDialog("Genrejen hakemisessa ongelmia! " + ex.getMessage());
+        }
+
+    }
+    
+    
+    public void tulostaValitut(TextArea text) {
+        try (PrintStream os = TextAreaOutputStream.getTextPrintStream(text)) {
+            os.println("Tulostetaan kaikki jäsenet");
+            Collection<Levy> levyt = kirjasto.etsi("", -1);
+            for (Levy levy:levyt) {
+                tulosta(os, levy);
+                os.println("\n\n");
+            }
+        }catch (SailoException ex) {
+            Dialogs.showMessageDialog("Levyn hakemisessa ongelmia! " + ex.getMessage());
+        }
     }
 
 }

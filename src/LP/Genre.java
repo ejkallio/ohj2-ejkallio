@@ -1,6 +1,7 @@
 package LP;
 
 import java.io.*;
+import fi.jyu.mit.ohj2.Mjonot;
 
 
 /**
@@ -100,6 +101,73 @@ public class Genre {
      */
     public int getLevyNro() {
         return levyNro;
+    }
+    
+    
+    /**
+     * Asettaa tunnusnumeron ja samalla varmistaa että
+     * seuraava numero on aina suurempi kuin tähän mennessä suurin.
+     * @param nr asetettava tunnusnumero
+     */
+    private void setIdNro(int nr) {
+        idNro = nr;
+        if (idNro >= seuraavaNro ) seuraavaNro = idNro + 1;
+    }
+    
+
+    /**
+     * Palauttaa genren tiedot merkkijonona jonka voi tallentaa tiedostoon.
+     * @return genre tolppaeroteltuna merkkijonona
+     * @example
+     * <pre name="test">
+     * Genre gen = new Genre();
+     * gen.parse(" 1 | 2 | Alternative Rock ");
+     * gen.toString() === "1|2|Alternative Rock";
+     * </pre>
+     */
+    @Override
+    public String toString() {
+        return "" + getIdNro() + "|" + levyNro + "|" + genre;
+    }
+    
+    
+    /**
+     * Selvittää genren tiedot | - merkillä erotellusta merkkijonosta.
+     * Pitää huolen että seuraavaNro on suurempi kuin tuleva idnro.
+     * @param rivi josta genren tiedot otetaan
+     * @example
+     * <pre name="test">
+     * Genre gen = new Genre();
+     * gen.parse(" 1 | 2 | Alternative Rock ");
+     * gen.getIdNro() === 1;
+     * gen.toString() === "1|2|Alternative Rock";
+     * 
+     * gen.rekisteroi();
+     * int n = gen.getIdNro();
+     * gen.parse("" + (n+20));
+     * gen.rekisteroi();
+     * gen.getIdNro() === n+20+1;
+     * gen.toString() === "" + (n+20+1) + "|2|Alternative Rock";
+     * </pre>
+     */
+    public void parse(String rivi) {
+        StringBuffer sb = new StringBuffer(rivi);
+        setIdNro(Mjonot.erota(sb, '|', getIdNro()));
+        levyNro = Mjonot.erota(sb, '|', levyNro);
+        genre = Mjonot.erota(sb, '|', genre);
+    }
+    
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        return this.toString().equals(obj.toString());
+    }
+    
+    
+    @Override
+    public int hashCode() {
+        return idNro;
     }
     
     

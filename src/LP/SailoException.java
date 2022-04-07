@@ -1,5 +1,12 @@
 package LP;
 
+
+/**
+ * Poikkeusluokka poikkeuksien käsittelyyn
+ * 
+ * @author Kivikallio
+ * @version 6.4.2022
+ */
 public class SailoException extends Exception {
     private static final long serialVersionUID = 1L;
     

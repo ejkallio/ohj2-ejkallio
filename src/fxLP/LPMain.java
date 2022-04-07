@@ -35,7 +35,13 @@ public class LPMain extends Application {
             lpCtrl.setKirjasto(kirjasto);
                     
             primaryStage.show();           
-            if ( !lpCtrl.avaa() ) Platform.exit();
+            
+            Application.Parameters params = getParameters();
+            if (params.getRaw().size() > 0)
+                lpCtrl.lueTiedosto(params.getRaw().get(0));
+            else
+                if (!lpCtrl.avaa()) Platform.exit();
+            
         } catch(Exception e) {
             e.printStackTrace();
         }
