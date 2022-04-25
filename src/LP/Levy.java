@@ -37,6 +37,36 @@ public class Levy {
     }
     
     
+    public String getArtisti() {
+        return artisti;
+    }
+    
+    
+    public String getJulkaisu() {
+        return julkaisuPaiva;
+    }
+    
+    
+    public String getYhtio() {
+        return levyYhtio;
+    }
+    
+    
+    public String getFormat() {
+        return formaatti;
+    }
+    
+    
+    public String getVari() {
+        return levynVari;
+    }
+    
+    
+    public String getTietoja() {
+        return lisatietoja;
+    }
+    
+    
     /**
      * annetaan testiarvo levylle
      */

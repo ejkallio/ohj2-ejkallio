@@ -49,7 +49,21 @@ public class LPGUIController implements Initializable {
     
     @FXML private ListChooser<Levy> chooserLevyt;
     
+    @FXML private ListChooser<Genre> chooserGenret;
     
+    @FXML private TextField editArtisti;
+
+    @FXML private TextField editFormat;
+
+    @FXML private TextField editJulk;
+
+    @FXML private TextField editNimi;
+
+    @FXML private TextField editTietoja;
+
+    @FXML private TextField editVari;
+
+    @FXML private TextField editYhtio;
     
     @Override
     public void initialize(URL url, ResourceBundle bundle) {
@@ -85,7 +99,8 @@ public class LPGUIController implements Initializable {
     }
 
     @FXML private void handleMuokkaa() {
-        ModalController.showModal(LPGUIController.class.getResource("LevyDialogView.fxml"), "Levy", null, "");
+        //ModalController.showModal(LPGUIController.class.getResource("LevyDialogView.fxml"), "Levy", null, "");
+        muokkaa();
     }
 
     @FXML private void handleNaytaTiedot() {
@@ -125,19 +140,22 @@ public class LPGUIController implements Initializable {
     private String kirjastonnimi = "Elias";
     private Kirjasto kirjasto;
     private Levy levyKohdalla;
-    private TextArea areaLevy = new TextArea();
+    //private TextArea areaLevy = new TextArea();
+    private TextField edits[];
     
     
     /**
      * Tekee tarvittavat muut alustukset
      */
     protected void alusta() {
-        panelLevy.setContent(areaLevy);
-        areaLevy.setFont(new Font("Courier New", 12));
-        panelLevy.setFitToHeight(true);
+        //panelLevy.setContent(areaLevy);
+        //areaLevy.setFont(new Font("Courier New", 12));
+        //panelLevy.setFitToHeight(true);
         
         chooserLevyt.clear();
         chooserLevyt.addSelectionListener(e -> naytaLevy());
+        
+        edits = new TextField[] {editNimi, editArtisti, editJulk, editFormat, editYhtio, editVari, editTietoja};
     }
     
     
@@ -294,15 +312,33 @@ public class LPGUIController implements Initializable {
     protected void naytaLevy() {
         levyKohdalla = chooserLevyt.getSelectedObject();
         
-        if (levyKohdalla == null) {
-            areaLevy.clear();
-            return;
-        }
+        if (levyKohdalla == null) return;
+
+
+        LPLevyController.naytaLevy(edits, levyKohdalla);
+        naytaGenret(levyKohdalla);
+    }
+    
+    
+    private void naytaGenret(Levy levy) {
+        chooserGenret.clear();
+        if (levy == null) return;
         
-        areaLevy.setText("");
-        try (PrintStream os = TextAreaOutputStream.getTextPrintStream(areaLevy)) {
-            tulosta(os, levyKohdalla);
+        try {
+            List<Genre> genret = kirjasto.annaGenret(levy);
+            if (genret.size() == 0) return;
+            for (Genre gen: genret)
+                naytaGenre(gen);
+            
+        } catch (SailoException e) {
+            //naytaVirhe(e.getMessage());
         }
+    }
+    
+    
+    private void naytaGenre(Genre gen) {
+        // String[] rivi = gen.toString().split("\\|");
+        chooserGenret.add(gen.getNimi(), gen);
     }
     
     
@@ -331,6 +367,11 @@ public class LPGUIController implements Initializable {
             Dialogs.showMessageDialog("Genrejen hakemisessa ongelmia! " + ex.getMessage());
         }
 
+    }
+    
+    
+    private void muokkaa() {
+        LPLevyController.kysyLevy(null, levyKohdalla);
     }
     
     

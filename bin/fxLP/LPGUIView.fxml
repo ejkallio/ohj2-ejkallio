@@ -9,7 +9,6 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -102,7 +101,7 @@
                         <Insets />
                      </GridPane.margin>
                   </Label>
-                  <TextField editable="false" text="Madvillainy" GridPane.columnIndex="1" />
+                  <TextField fx:id="editNimi" editable="false" text="Madvillainy" GridPane.columnIndex="1" />
                   <Label text="Artisti" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets />
@@ -113,8 +112,8 @@
                         <Insets />
                      </GridPane.margin>
                   </Label>
-                  <TextField editable="false" text="Madvillain" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <TextField editable="false" text="23.3.2004" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <TextField fx:id="editArtisti" editable="false" text="Madvillain" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <TextField fx:id="editJulk" editable="false" text="23.3.2004" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                   <Label text="Levy-yhtiö" GridPane.rowIndex="5">
                      <GridPane.margin>
                         <Insets />
@@ -126,17 +125,13 @@
                      </GridPane.margin>
                   </Label>
                   <TextField editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <TextField editable="false" text="LP" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <TextField fx:id="editFormat" editable="false" text="LP" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                   <Label text="Painoksen julkaisupäivä" GridPane.rowIndex="3" />
-                  <TextField editable="false" text="Stones Throw" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                  <TextField editable="false" text="Musta" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                  <TextField fx:id="editYhtio" editable="false" text="Stones Throw" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <TextField fx:id="editVari" editable="false" text="Musta" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                   <Label text="Vinyylin väri" GridPane.rowIndex="6" />
                   <Label text="Lisätietoja" GridPane.rowIndex="7" />
-                  <TextArea editable="false" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
-                     <GridPane.margin>
-                        <Insets top="20.0" />
-                     </GridPane.margin>
-                  </TextArea>
+                  <TextField fx:id="editTietoja" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                </children>
                <padding>
                   <Insets left="10.0" right="10.0" top="10.0" />
@@ -159,7 +154,7 @@
          <bottom>
             <BorderPane prefHeight="250.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <center>
-                  <ListChooser rivit="Experimental Hip Hop&#10;Jazz Rap&#10;" BorderPane.alignment="CENTER" />
+                  <ListChooser fx:id="chooserGenret" rivit="Experimental Hip Hop&#10;Jazz Rap&#10;" BorderPane.alignment="CENTER" />
                </center>
                <top>
                   <Label text="Genre" BorderPane.alignment="CENTER" />

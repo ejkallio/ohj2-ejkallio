@@ -104,6 +104,11 @@ public class Genre {
     }
     
     
+    public String getNimi() {
+        return genre;
+    }
+    
+    
     /**
      * Asettaa tunnusnumeron ja samalla varmistaa että
      * seuraava numero on aina suurempi kuin tähän mennessä suurin.

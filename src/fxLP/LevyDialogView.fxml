@@ -5,7 +5,6 @@
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -71,19 +70,15 @@
                         <Insets top="10.0" />
                      </GridPane.margin>
                   </Label>
-                  <TextField text="Station to Station" GridPane.columnIndex="1" />
-                  <TextField text="David Bowie" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <TextField text="23.1.192030" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <TextField fx:id="editNimi" text="Station to Station" GridPane.columnIndex="1" />
+                  <TextField fx:id="editArtisti" text="David Bowie" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <TextField fx:id="editJulk" text="23.1.1920" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                   <TextField GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <TextField text="LP" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                  <TextField text="RCA" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                  <TextField text="Musta" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                  <TextArea maxHeight="200.0" prefHeight="90.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
-                     <GridPane.margin>
-                        <Insets top="5.0" />
-                     </GridPane.margin>
-                  </TextArea>
+                  <TextField fx:id="editFormat" text="LP" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <TextField fx:id="editYhtio" text="RCA" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <TextField fx:id="editVari" text="Musta" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                   <Label fx:id="labelVirhe" prefHeight="17.0" prefWidth="191.0" text="Julkaisupäivä: väärä julkaisupäivä" GridPane.columnSpan="2147483647" GridPane.rowIndex="8" />
+                  <TextField fx:id="editTietoja" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                </children>
             </GridPane>
          </content>
