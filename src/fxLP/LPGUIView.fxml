@@ -56,7 +56,7 @@
          <bottom>
             <BorderPane prefWidth="200.0" BorderPane.alignment="CENTER">
                <center>
-                  <ListChooser fx:id="chooserLevyt" rivit="Madvillain - Madvillainy&#10;" BorderPane.alignment="CENTER" />
+                  <ListChooser fx:id="chooserLevyt" BorderPane.alignment="CENTER" />
                </center>
                <top>
                   <Label text="Levyt" BorderPane.alignment="CENTER" />
@@ -80,7 +80,7 @@
    <center>
       <ScrollPane fx:id="panelLevy" fitToWidth="true" minWidth="300.0" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <content>
-            <GridPane hgap="10.0">
+            <GridPane fx:id="gridLevy" hgap="10.0">
               <columnConstraints>
                 <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="60.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -101,7 +101,7 @@
                         <Insets />
                      </GridPane.margin>
                   </Label>
-                  <TextField fx:id="editNimi" editable="false" text="Madvillainy" GridPane.columnIndex="1" />
+                  <TextField fx:id="editNimi" editable="false" GridPane.columnIndex="1" />
                   <Label text="Artisti" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets />
@@ -112,8 +112,8 @@
                         <Insets />
                      </GridPane.margin>
                   </Label>
-                  <TextField fx:id="editArtisti" editable="false" text="Madvillain" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <TextField fx:id="editJulk" editable="false" text="23.3.2004" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <TextField fx:id="editArtisti" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <TextField fx:id="editJulk" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                   <Label text="Levy-yhtiö" GridPane.rowIndex="5">
                      <GridPane.margin>
                         <Insets />
@@ -125,10 +125,10 @@
                      </GridPane.margin>
                   </Label>
                   <TextField editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <TextField fx:id="editFormat" editable="false" text="LP" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <TextField fx:id="editFormat" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                   <Label text="Painoksen julkaisupäivä" GridPane.rowIndex="3" />
-                  <TextField fx:id="editYhtio" editable="false" text="Stones Throw" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                  <TextField fx:id="editVari" editable="false" text="Musta" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                  <TextField fx:id="editYhtio" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <TextField fx:id="editVari" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                   <Label text="Vinyylin väri" GridPane.rowIndex="6" />
                   <Label text="Lisätietoja" GridPane.rowIndex="7" />
                   <TextField fx:id="editTietoja" GridPane.columnIndex="1" GridPane.rowIndex="7" />
@@ -154,7 +154,7 @@
          <bottom>
             <BorderPane prefHeight="250.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <center>
-                  <ListChooser fx:id="chooserGenret" rivit="Experimental Hip Hop&#10;Jazz Rap&#10;" BorderPane.alignment="CENTER" />
+                  <ListChooser fx:id="chooserGenret" BorderPane.alignment="CENTER" />
                </center>
                <top>
                   <Label text="Genre" BorderPane.alignment="CENTER" />
@@ -175,7 +175,7 @@
       </BorderPane>
    </right>
    <bottom>
-      <VBox alignment="TOP_CENTER" prefWidth="100.0" BorderPane.alignment="CENTER">
+      <VBox alignment="TOP_CENTER" minHeight="50.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
             <Label fx:id="labelVirhe" alignment="CENTER" />
             <HBox prefWidth="200.0" spacing="10.0">

@@ -1,5 +1,7 @@
 package fxLP;
 
+import static fxLP.LPLevyController.getFieldId;
+
 import fi.jyu.mit.fxgui.Dialogs;
 import fi.jyu.mit.fxgui.ListChooser;
 import fi.jyu.mit.fxgui.ModalController;
@@ -27,6 +29,7 @@ import javafx.scene.control.TextField;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -51,6 +54,8 @@ public class LPGUIController implements Initializable {
     
     @FXML private ListChooser<Genre> chooserGenret;
     
+    @FXML private GridPane gridLevy;
+    
     @FXML private TextField editArtisti;
 
     @FXML private TextField editFormat;
@@ -72,14 +77,7 @@ public class LPGUIController implements Initializable {
     
     
     @FXML private void handleHakuehto() {
-        //String hakukentta = cbKentat.getSelectedText();
-        //String ehto = hakuehto.getText();
-        //if ( ehto.isEmpty() )
-        //    naytaVirhe(null);
-        //else
-        //    naytaVirhe("Ei osata vielä hakea " + hakukentta + ": " + ehto);
-        if (levyKohdalla != null)
-            hae(levyKohdalla.getIdNro());
+        hae(0);
     }
     
     
@@ -100,7 +98,7 @@ public class LPGUIController implements Initializable {
 
     @FXML private void handleMuokkaa() {
         //ModalController.showModal(LPGUIController.class.getResource("LevyDialogView.fxml"), "Levy", null, "");
-        muokkaa();
+        muokkaa(1);
     }
 
     @FXML private void handleNaytaTiedot() {
@@ -108,11 +106,11 @@ public class LPGUIController implements Initializable {
     }
 
     @FXML private void handlePoistaGenre() {
-        Dialogs.showMessageDialog("Ei osata vielä poistaa genrejä");
+        poistaGenre();
     }
 
     @FXML private void handlePoistaLevy() {
-        Dialogs.showMessageDialog("Ei osata vielä poistaa levyjä");
+        poistaLevy();
     }
 
     @FXML private void handleSiirryKirjastoon() {
@@ -140,8 +138,10 @@ public class LPGUIController implements Initializable {
     private String kirjastonnimi = "Elias";
     private Kirjasto kirjasto;
     private Levy levyKohdalla;
+    private static Levy apulevy = new Levy();
     //private TextArea areaLevy = new TextArea();
     private TextField edits[];
+    private int kentta = 0;
     
     
     /**
@@ -155,7 +155,19 @@ public class LPGUIController implements Initializable {
         chooserLevyt.clear();
         chooserLevyt.addSelectionListener(e -> naytaLevy());
         
-        edits = new TextField[] {editNimi, editArtisti, editJulk, editFormat, editYhtio, editVari, editTietoja};
+        cbKentat.clear();
+        for (int k = apulevy.ekaKentta(); k < apulevy.getKenttia(); k++)
+            cbKentat.add(apulevy.getKysymys(k), null);
+        cbKentat.getSelectionModel().select(0);
+        
+        edits = LPLevyController.luoKentat(gridLevy);
+        for (TextField edit: edits)
+            if ( edit != null ) {
+                edit.setEditable(false);
+                edit.setOnMouseClicked(e -> { if (e.getClickCount() > 1) muokkaa(getFieldId(e.getSource(), 0));
+                });
+                edit.focusedProperty().addListener((a,o,n) -> kentta = getFieldId(edit,kentta));
+            }
     }
     
     
@@ -232,15 +244,19 @@ public class LPGUIController implements Initializable {
     
     /**
      * Hakee levyjen tiedot listaan
-     * @param jnro levyn numero, joka aktivoidaan haun jälkeen
+     * @param jnr levyn numero, joka aktivoidaan haun jälkeen
      */
-    protected void hae(int jnro) {
-        int k = cbKentat.getSelectionModel().getSelectedIndex();
+    protected void hae(int jnr) {
+        int jnro = jnr;
+        if (jnro <= 0) {
+            Levy kohdalla = levyKohdalla;
+            if ( kohdalla != null ) jnro = kohdalla.getIdNro();
+        }
+        
+        int k = cbKentat.getSelectionModel().getSelectedIndex() + apulevy.ekaKentta();
+        
         String ehto = hakuehto.getText();
-        if(k > 0 || ehto.length() > 0)
-            naytaVirhe(String.format("ei osata hakea (kenttä: %d, ehto: %s)", k, ehto));
-        else 
-            naytaVirhe(null);
+        if (ehto.indexOf('*') < 0) ehto = "*" + ehto + "*";
         
         chooserLevyt.clear();
         
@@ -265,19 +281,19 @@ public class LPGUIController implements Initializable {
      * Luo uuden levyn jota aletaan editoimaan
      */
     protected void lisaaLevy() {
-        Levy uusi = new Levy();
-        uusi.rekisteroi();
-        uusi.defaultLevy();
         try {
+            Levy uusi = new Levy();
+            uusi = LPLevyController.kysyLevy(null, uusi, 1);
+            if (uusi == null) return;
+            uusi.rekisteroi();
             kirjasto.lisaa(uusi);
-        } catch (SailoException e) {
-            Dialogs.showMessageDialog("Ongelmia uuden luomisessa " + e.getMessage());
-            return;
-        }
-        hae(uusi.getIdNro());
-        
-        
+            hae(uusi.getIdNro());
+            } catch (SailoException e) {
+                Dialogs.showMessageDialog("Ongelmia uuden luomisessa " + e.getMessage());
+                return;
+        }     
     }
+    
     
     
     /**
@@ -286,8 +302,10 @@ public class LPGUIController implements Initializable {
     public void uusiGenre() {
         if ( levyKohdalla == null ) return;
         Genre gen = new Genre();
+        
         gen.rekisteroi();
         gen.defaultGenre(levyKohdalla.getIdNro());
+        gen = GenreController.kysyNimi(null, gen, 0);
         try {
             kirjasto.lisaa(gen);
         } catch (SailoException e) {
@@ -331,7 +349,7 @@ public class LPGUIController implements Initializable {
                 naytaGenre(gen);
             
         } catch (SailoException e) {
-            //naytaVirhe(e.getMessage());
+            naytaVirhe(e.getMessage());
         }
     }
     
@@ -370,8 +388,45 @@ public class LPGUIController implements Initializable {
     }
     
     
-    private void muokkaa() {
-        LPLevyController.kysyLevy(null, levyKohdalla);
+    private void muokkaa(int k) {
+        if (levyKohdalla == null) return;
+        try {
+            Levy levy;
+            levy = LPLevyController.kysyLevy(null, levyKohdalla.clone(), k);
+            if (levy == null) return;
+            kirjasto.korvaaTaiLisaa(levy);
+            hae(levy.getIdNro());
+        } catch (CloneNotSupportedException e) {
+            //
+        } catch (SailoException e) {
+            Dialogs.showMessageDialog(e.getMessage());
+        }
+    }
+    
+    
+    private void poistaLevy() {
+        Levy levy = levyKohdalla;
+        if (levy == null) return;
+        if (!Dialogs.showQuestionDialog("Poisto", "Poistetaanko levy: " + levy.getNimi() + "?", "Kyllä", "Ei") )
+            return;
+        kirjasto.poista(levy);
+        int index = chooserLevyt.getSelectedIndex();
+        hae(0);
+        chooserLevyt.setSelectedIndex(index);
+    }
+    
+    
+    private void poistaGenre() {
+        int index = chooserGenret.getSelectedIndex();
+        if (index < 0) return;
+        Genre genre = chooserGenret.getSelectedObject();
+        if (genre == null) return;
+        kirjasto.poistaGenre(genre);
+        naytaGenret(levyKohdalla);
+        int genreja = chooserGenret.getItems().size();
+        if (index >= genreja) index = genreja -1;
+        chooserGenret.getFocusModel().focus(index);
+        chooserGenret.getSelectionModel().select(index);
     }
     
     

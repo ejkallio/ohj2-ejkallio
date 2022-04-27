@@ -26,11 +26,19 @@ public class Kirjasto {
     
     /**
      * Poistaa kirjastosta ne joilla on nro. kesken
-     * @param nro viitenumero, jonka mukaan poistetaan
+     * @param levy joka halutaan poistaa
      * @return montako levyä poistettiin
      */
-    public int poista(@SuppressWarnings("unused") int nro) {
-        return 0;
+    public int poista(Levy levy) {
+        if (levy == null) return 0;
+        int ret = levyt.poista(levy.getIdNro());
+        genret.poistaLevynGenret(levy.getIdNro());
+        return ret;
+    }
+    
+    
+    public void poistaGenre(Genre genre) {
+        genret.poista(genre);
     }
     
     
@@ -55,6 +63,11 @@ public class Kirjasto {
      */
     public void lisaa(Levy levy) throws SailoException {
         levyt.lisaa(levy);
+    }
+    
+    
+    public void korvaaTaiLisaa(Levy levy) throws SailoException {
+        levyt.korvaaTaiLisaa(levy);
     }
     
     

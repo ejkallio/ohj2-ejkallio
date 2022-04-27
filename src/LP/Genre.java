@@ -119,6 +119,13 @@ public class Genre {
         if (idNro >= seuraavaNro ) seuraavaNro = idNro + 1;
     }
     
+    
+    public String setNimi(String nimi) {
+        String tjono = nimi.trim();
+        genre = tjono;
+        return null;
+    }
+    
 
     /**
      * Palauttaa genren tiedot merkkijonona jonka voi tallentaa tiedostoon.

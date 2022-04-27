@@ -1,6 +1,8 @@
 package LP;
 
 import java.io.*;
+import java.util.Comparator;
+
 import fi.jyu.mit.ohj2.Mjonot;
 
 
@@ -10,7 +12,7 @@ import fi.jyu.mit.ohj2.Mjonot;
  * @version 31.3.2022
  *
  */
-public class Levy {
+public class Levy implements Cloneable{
     private int        idNro;
     private String     levynNimi       = "";
     private String     artisti         = "";
@@ -21,6 +23,74 @@ public class Levy {
     private String     lisatietoja     = "";
     
     private static int seuraavaNro     = 1;
+    
+    
+    /**
+     * Palauttaa kenttien lukumäärän
+     * @return kenttien lukumäärä
+     */
+    public int getKenttia() {
+        return 8;
+    }
+    
+    
+    /**
+     * Eka kenttä joka on mielekäs kysyttäväksi
+     * @return ekan kentän indeksi
+     */
+    public int ekaKentta() {
+        return 1;
+    }
+    
+    
+    /**
+     * 
+     * Levyjen vertailija
+     * 
+     */
+    public static class Vertailija implements Comparator<Levy> {
+        private int k;
+        
+        @SuppressWarnings("javadoc")
+        public Vertailija(int k) {
+            this.k = k;
+        }
+        
+        
+        @Override
+        public int compare(Levy levy1, Levy levy2) {
+            return levy1.getAvain(k).compareToIgnoreCase(levy2.getAvain(k));
+        }
+    }
+    
+    
+    /**
+     * Antaa k:n kentän sisällön merkkijonona
+     * @param k monennenko kentän sisältö palautetaan
+     * @return kentän sisältö merkkijonona
+     */
+    public String getAvain(int k) {
+        switch (k) {
+        case 0: return "" + idNro;
+        case 1: return "" + levynNimi.toUpperCase();
+        case 2: return "" + artisti;
+        case 3: return "" + julkaisuPaiva;
+        case 4: return "" + levyYhtio;
+        case 5: return "" + formaatti;
+        case 6: return "" + levynVari;
+        case 7: return "" + lisatietoja;
+        default: return "null";
+        }
+    }
+    
+    
+    /**
+     * Alustetaan jäsenen merkkijjono-attribuutti tyhjiksi jonoiksi
+     * ja tunnusnro = 0;
+     */
+    public Levy() {
+        // Tyhjä toistaiseksi
+    }
     
     
     /**
@@ -64,6 +134,112 @@ public class Levy {
     
     public String getTietoja() {
         return lisatietoja;
+    }
+    
+    
+    public String setNimi(String s) {
+        levynNimi = s;
+        return null;
+    }
+    
+    
+    public String setArtisti(String s) {
+        artisti = s;
+        return null;
+    }
+    
+    
+    public String setJulkaisu(String s) {
+        julkaisuPaiva = s;
+        return null;
+    }
+    
+    
+    public String setYhtio(String s) {
+        levyYhtio = s;
+        return null;
+    }
+    
+    
+    public String setFormat(String s) {
+        formaatti = s;
+        return null;
+    }
+    
+    
+    public String setVari(String s) {
+        levynVari = s;
+        return null;
+    }
+    
+    
+    public String setTietoja(String s) {
+        lisatietoja = s;
+        return null;
+    }
+    
+    
+    public String anna(int k) {
+        switch (k) {
+        case 0: return "" + idNro;
+        case 1: return "" + levynNimi;
+        case 2: return "" + artisti;
+        case 3: return "" + julkaisuPaiva;
+        case 4: return "" + levyYhtio;
+        case 5: return "" + formaatti;
+        case 6: return "" + levynVari;
+        case 7: return "" + lisatietoja;
+        default: return "null";
+        }
+    }
+    
+    
+    public String aseta(int k, String jono) {
+        String tjono = jono.trim();
+        StringBuffer sb = new StringBuffer(tjono);
+        switch (k) {
+        case 0:
+            setIdNro(Mjonot.erota(sb, '§', getIdNro()));
+            return null;
+        case 1:
+            levynNimi = tjono;
+            return null;
+        case 2: 
+            artisti = tjono;
+            return null;
+        case 3: 
+            julkaisuPaiva = tjono;
+            return null;
+        case 4: 
+            levyYhtio = tjono;
+            return null;
+        case 5: 
+            formaatti = tjono;
+            return null;
+        case 6: 
+            levynVari = tjono;
+            return null;
+        case 7: 
+            lisatietoja = tjono;
+            return null;
+        default:
+            return "null";
+        }
+    }
+    
+    
+    public String getKysymys(int k) {
+        switch (k) {
+        case 0: return "Id nro";
+        case 1: return "Levyn nimi";
+        case 2: return "Artisti";
+        case 3: return "Julkaisupäivä";
+        case 4: return "Levy-yhtiö";
+        case 5: return "Formaatti";
+        case 6: return "Levyn väri";
+        case 7: return "Lisätietoja";
+        default: return "null";
+        }
     }
     
     
@@ -157,15 +333,14 @@ public class Levy {
      */
     @Override
     public String toString() {
-        return "" + 
-                getIdNro() + "|" +
-                levynNimi + "|" + 
-                artisti + "|" + 
-                julkaisuPaiva + "|" +
-                levyYhtio + "|" +
-                formaatti + "|" + 
-                levynVari + "|" + 
-                lisatietoja;
+        StringBuffer sb = new StringBuffer("");
+        String erotin = "";
+        for (int k = 0; k < getKenttia(); k++) {
+            sb.append(erotin);
+            sb.append(anna(k));
+            erotin = "|";
+        }
+        return sb.toString();
     }
     
     
@@ -188,21 +363,31 @@ public class Levy {
      */
     public void parse(String rivi) {
         StringBuffer sb = new StringBuffer(rivi);
-        setIdNro(Mjonot.erota(sb, '|', getIdNro()));
-        levynNimi = Mjonot.erota(sb, '|', levynNimi);
-        artisti = Mjonot.erota(sb, '|', artisti);
-        julkaisuPaiva = Mjonot.erota(sb, '|', julkaisuPaiva);
-        levyYhtio = Mjonot.erota(sb, '|', levyYhtio);
-        formaatti = Mjonot.erota(sb, '|', formaatti);
-        levynVari = Mjonot.erota(sb, '|', levynVari);
-        lisatietoja = Mjonot.erota(sb, '|', lisatietoja);
+        for (int k = 0; k < getKenttia(); k++)
+            aseta(k, Mjonot.erota(sb, '|'));
+    }
+    
+    
+    @Override
+    public Levy clone() throws CloneNotSupportedException {
+        Levy uusi;
+        uusi = (Levy) super.clone();
+        return uusi;
+    }
+    
+    
+    public boolean equals(Levy levy) {
+        if (levy == null) return false;
+        for (int k = 0; k < getKenttia(); k++)
+            if (!anna(k).equals(levy.anna(k)) ) return false;
+        return true;
     }
     
     
     @Override
     public boolean equals(Object levy) {
-        if (levy == null) return false;
-        return this.toString().equals(levy.toString());
+        if (levy instanceof Levy) return equals((Levy)levy);
+        return false;
     }
     
     

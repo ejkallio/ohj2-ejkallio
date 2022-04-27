@@ -3,6 +3,8 @@ package LP;
 import java.io.*;
 import java.util.*;
 
+import fi.jyu.mit.ohj2.WildChars;
+
 
 /**
  * Kirjaston levyt, joka osaa mm. lisätä uuden levyn
@@ -11,7 +13,7 @@ import java.util.*;
  *
  */
 public class Levyt implements Iterable<Levy> {
-    public static final int MAX_LEVYJA    = 5;
+    public static final int MAX_LEVYJA    = 15;
     private boolean muutettu = false;
     private int lkm = 0;
     private String kokoNimi = "";
@@ -76,6 +78,19 @@ public class Levyt implements Iterable<Levy> {
     public Levy anna(int i) throws IndexOutOfBoundsException {
         if (i < 0 || lkm <= i) throw new IndexOutOfBoundsException("Laiton indeksi: " + i);
         return alkiot[i];
+    }
+    
+    
+    public void korvaaTaiLisaa(Levy levy) throws SailoException {
+        int id = levy.getIdNro();
+        for (int i = 0; i < lkm; i++) {
+            if (alkiot[i].getIdNro() == id) {
+                alkiot[i] = levy;
+                muutettu = true;
+                return;
+            }
+        }
+        lisaa(levy);
     }
     
     
@@ -148,7 +163,7 @@ public class Levyt implements Iterable<Levy> {
     
     
     /**
-     * Tallentaa kirjaston tiedostoon, kesken
+     * Tallentaa levyt tiedostoon
      * @throws SailoException jos talletus epäonnistuu
      */
     public void tallenna() throws SailoException {
@@ -175,6 +190,18 @@ public class Levyt implements Iterable<Levy> {
          
          
          muutettu = false;
+    }
+    
+    
+    public int poista(int id) {
+        int ind = etsiId(id);
+        if (ind < 0) return 0;
+        lkm--;
+        for (int i = ind; i < lkm; i++)
+            alkiot[i] = alkiot[i + 1];
+        alkiot[lkm] = null;
+        muutettu = true;
+        return 1;
     }
     
     
@@ -244,11 +271,32 @@ public class Levyt implements Iterable<Levy> {
     
     @SuppressWarnings("unused")
     public Collection<Levy> etsi(String hakuehto, int k) {
-        Collection<Levy> loytyneet = new ArrayList<Levy>();
+        String ehto = "*";
+        if (hakuehto != null && hakuehto.length() > 0) ehto = hakuehto;
+        int hk = k;
+        if (hk < 0) hk = 0;
+        List<Levy> loytyneet = new ArrayList<Levy>();
         for(Levy levy : this) {
-            loytyneet.add(levy);
+            if (WildChars.onkoSamat(levy.anna(hk), ehto)) loytyneet.add(levy);
         }
+        
+        Collections.sort(loytyneet, new Levy.Vertailija(hk));
         return loytyneet;
+    }
+    
+    
+    public Levy annaId(int id) {
+        for(Levy levy : this) {
+            if (id == levy.getIdNro()) return levy;
+        }
+        return null;
+    }
+    
+    
+    public int etsiId(int id) {
+        for (int i = 0; i < lkm; i++)
+            if (id == alkiot[i].getIdNro()) return i;
+        return -1;
     }
     
     
@@ -271,8 +319,8 @@ public class Levyt implements Iterable<Levy> {
             
             System.out.println("============= Levyt testi =============");
             
-            for (int i = 0; i < levyt.getLkm(); i++ ) {
-                Levy levy = levyt.anna(i);
+            int i = 0;
+            for (Levy levy: levyt) {
                 System.out.println("Levy nro: " + i);
                 levy.tulosta(System.out);
             }

@@ -80,7 +80,7 @@
    <center>
       <ScrollPane fx:id="panelLevy" fitToWidth="true" minWidth="300.0" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <content>
-            <GridPane hgap="10.0">
+            <GridPane fx:id="gridLevy" hgap="10.0">
               <columnConstraints>
                 <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="60.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -175,7 +175,7 @@
       </BorderPane>
    </right>
    <bottom>
-      <VBox alignment="TOP_CENTER" prefWidth="100.0" BorderPane.alignment="CENTER">
+      <VBox alignment="TOP_CENTER" minHeight="50.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
             <Label fx:id="labelVirhe" alignment="CENTER" />
             <HBox prefWidth="200.0" spacing="10.0">

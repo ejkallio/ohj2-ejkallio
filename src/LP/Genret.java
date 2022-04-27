@@ -141,7 +141,30 @@ public class Genret implements Iterable<Genre> {
     }
     
     
+    /**
+     * Poistaa halutun genren
+     * @param genre joka halutaan poistaa
+     * @return true jos poistettava löytyi
+     */
+    public boolean poista(Genre genre) {
+        boolean ret = alkiot.remove(genre);
+        if (ret) muutettu = true;
+        return ret;
+    }
     
+    
+    public int poistaLevynGenret(int idNro) {
+        int n = 0;
+        for (Iterator<Genre> it = alkiot.iterator(); it.hasNext();) {
+            Genre gen = it.next();
+            if ( gen.getLevyNro() == idNro ) {
+                it.remove();
+                n++;
+            }
+        }
+        if (n > 0) muutettu = true;
+        return n;
+    }
     
     
     /**

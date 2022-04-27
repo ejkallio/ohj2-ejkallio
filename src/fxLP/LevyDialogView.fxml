@@ -36,9 +36,9 @@
       </VBox>
    </bottom>
    <center>
-      <ScrollPane fitToWidth="true" minWidth="300.0" prefHeight="350.0" prefWidth="300.0" BorderPane.alignment="CENTER">
+      <ScrollPane fx:id="panelLevy" fitToWidth="true" minWidth="300.0" prefHeight="350.0" prefWidth="300.0" BorderPane.alignment="CENTER">
          <content>
-            <GridPane hgap="10.0">
+            <GridPane fx:id="gridLevy" hgap="10.0">
               <columnConstraints>
                 <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="90.0" prefWidth="90.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -70,15 +70,15 @@
                         <Insets top="10.0" />
                      </GridPane.margin>
                   </Label>
-                  <TextField fx:id="editNimi" text="Station to Station" GridPane.columnIndex="1" />
-                  <TextField fx:id="editArtisti" text="David Bowie" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <TextField fx:id="editJulk" text="23.1.1920" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <TextField text="Station to Station" GridPane.columnIndex="1" />
+                  <TextField text="David Bowie" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <TextField text="23.1.1920" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                   <TextField GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <TextField fx:id="editFormat" text="LP" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                  <TextField fx:id="editYhtio" text="RCA" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                  <TextField fx:id="editVari" text="Musta" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                  <TextField text="LP" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <TextField text="RCA" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <TextField text="Musta" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                   <Label fx:id="labelVirhe" prefHeight="17.0" prefWidth="191.0" text="Julkaisupäivä: väärä julkaisupäivä" GridPane.columnSpan="2147483647" GridPane.rowIndex="8" />
-                  <TextField fx:id="editTietoja" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="7" />
                </children>
             </GridPane>
          </content>
