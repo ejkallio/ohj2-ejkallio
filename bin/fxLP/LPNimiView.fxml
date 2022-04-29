@@ -54,7 +54,7 @@
                   <Font name="System Italic" size="18.0" />
                </font>
             </Label>
-            <Label text="Versio 0.1">
+            <Label text="Versio 0.7">
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>

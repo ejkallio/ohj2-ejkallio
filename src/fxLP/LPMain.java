@@ -7,7 +7,6 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.fxml.FXMLLoader;
 import LP.Kirjasto;
-import fi.jyu.mit.fxgui.ListChooser;
 
 /**
  * @author Kivikallio

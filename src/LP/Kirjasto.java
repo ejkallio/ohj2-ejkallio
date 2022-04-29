@@ -8,8 +8,47 @@ import java.util.*;
  * Kirjasto-luokka, joka huolehtii levyistä. Pääosin kaikki
  * metodit ovat "välittäjämetodeja" levyihin.
  * @author Kivikallio
- * @version 31.3.2022
- *
+ * @version 27.4.2022
+ * 
+ * 
+ * @example
+ * <pre name="testJAVA">
+ * #import LP.SailoException;
+ * private Kirjasto kirjasto;
+ * private Levy levy1;
+ * private Levy levy2;
+ * private int jid1;
+ * private int jid2;
+ * private Genre gen1;
+ * private Genre gen2;
+ * private Genre gen3;
+ * private Genre gen4;
+ * private Genre gen5;
+ * 
+ * public void alustaKirjasto() {
+ *     kirjasto = new Kirjasto();
+ *     levy1 = new Levy(); levy1.defaultLevy(); levy1.rekisteroi();
+ *     levy2 = new Levy(); levy2.defaultLevy(); levy2.rekisteroi();
+ *     jid1 = levy1.getIdNro();
+ *     jid2 = levy2.getIdNro();
+ *     gen1 = new Genre(jid2); gen1.defaultGenre(jid2);
+ *     gen2 = new Genre(jid1); gen2.defaultGenre(jid1);
+ *     gen3 = new Genre(jid2); gen3.defaultGenre(jid2);
+ *     gen4 = new Genre(jid1); gen4.defaultGenre(jid1);
+ *     gen5 = new Genre(jid2); gen5.defaultGenre(jid2);
+ *     try {
+ *     kirjasto.lisaa(levy1);
+ *     kirjasto.lisaa(levy2);
+ *     kirjasto.lisaa(gen1);
+ *     kirjasto.lisaa(gen2);
+ *     kirjasto.lisaa(gen3);
+ *     kirjasto.lisaa(gen4);
+ *     kirjasto.lisaa(gen5);
+ *     } catch (Exception e) {
+ *      System.err.println(e.getMessage());
+ *     }
+ *    }
+ *   </pre>
  */
 public class Kirjasto {
     private Levyt levyt = new Levyt();
@@ -37,6 +76,18 @@ public class Kirjasto {
     }
     
     
+    /**
+     * Poistaa halutun genren
+     * @param genre joka poistetaan
+     * @example
+     * <pre name="test">
+     * #THROWS Exception
+     *  alustaKirjasto();
+     *  kirjasto.annaGenret(levy1).size() === 2;
+     *  kirjasto.poistaGenre(gen2);
+     *  kirjasto.annaGenret(levy1).size() === 1;
+     * </pre>
+     */
     public void poistaGenre(Genre genre) {
         genret.poista(genre);
     }
@@ -66,6 +117,19 @@ public class Kirjasto {
     }
     
     
+    /**
+     * Korvaa levyn tietorakenteessa. 
+     * @param levy lisättävän levyn viite
+     * @throws SailoException jos täynnä
+     * @example
+     * <pre name="test">
+     * #THROWS SailoException
+     *  alustaKirjasto();
+     *  kirjasto.etsi("*",0).size() === 2;
+     *  kirjasto.korvaaTaiLisaa(levy1);
+     *  kirjasto.etsi("*",0).size() === 2;
+     * </pre>
+     */
     public void korvaaTaiLisaa(Levy levy) throws SailoException {
         levyt.korvaaTaiLisaa(levy);
     }

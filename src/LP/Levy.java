@@ -9,7 +9,7 @@ import fi.jyu.mit.ohj2.Mjonot;
 /**
  * Kirjaston levy joka osaa mm. huolehtia omasta tunnusnumerostaan.
  * @author Kivikallio
- * @version 31.3.2022
+ * @version 27.4.2022
  *
  */
 public class Levy implements Cloneable{
@@ -65,7 +65,7 @@ public class Levy implements Cloneable{
     
     
     /**
-     * Antaa k:n kentän sisällön merkkijonona
+     * Palauttaa halutun kentän sisällön merkkijonona
      * @param k monennenko kentän sisältö palautetaan
      * @return kentän sisältö merkkijonona
      */
@@ -89,7 +89,7 @@ public class Levy implements Cloneable{
      * ja tunnusnro = 0;
      */
     public Levy() {
-        // Tyhjä toistaiseksi
+        // Tyhjä
     }
     
     
@@ -107,78 +107,22 @@ public class Levy implements Cloneable{
     }
     
     
-    public String getArtisti() {
-        return artisti;
-    }
-    
-    
-    public String getJulkaisu() {
-        return julkaisuPaiva;
-    }
-    
-    
-    public String getYhtio() {
-        return levyYhtio;
-    }
-    
-    
-    public String getFormat() {
-        return formaatti;
-    }
-    
-    
-    public String getVari() {
-        return levynVari;
-    }
-    
-    
-    public String getTietoja() {
-        return lisatietoja;
-    }
-    
-    
+    /**
+     * asettaa levylle halutun nimen
+     * @param s levyn uusi nimi
+     * @return null
+     */
     public String setNimi(String s) {
         levynNimi = s;
         return null;
     }
     
     
-    public String setArtisti(String s) {
-        artisti = s;
-        return null;
-    }
-    
-    
-    public String setJulkaisu(String s) {
-        julkaisuPaiva = s;
-        return null;
-    }
-    
-    
-    public String setYhtio(String s) {
-        levyYhtio = s;
-        return null;
-    }
-    
-    
-    public String setFormat(String s) {
-        formaatti = s;
-        return null;
-    }
-    
-    
-    public String setVari(String s) {
-        levynVari = s;
-        return null;
-    }
-    
-    
-    public String setTietoja(String s) {
-        lisatietoja = s;
-        return null;
-    }
-    
-    
+    /**
+     * Antaa halutun kentän sisällön merkkijonona
+     * @param k kenttä jonka sisältö palautetaan
+     * @return kentän sisältö
+     */
     public String anna(int k) {
         switch (k) {
         case 0: return "" + idNro;
@@ -194,6 +138,17 @@ public class Levy implements Cloneable{
     }
     
     
+    /**
+     * Asettaa halutun kentän arvoksi annetun merkkijonon arvon
+     * @param k kenttä jonka arvo asetetaan
+     * @param jono jono joka asetetaan uudeksi arvoksi
+     * @return null jos onnistuu, virhe jos epäonnistuu
+     * @example
+     * <pre name="test">
+     * Levy levy = new Levy();
+     * levy.aseta(1, "In Rainbows") === null;
+     * </pre>
+     */
     public String aseta(int k, String jono) {
         String tjono = jono.trim();
         StringBuffer sb = new StringBuffer(tjono);
@@ -228,6 +183,11 @@ public class Levy implements Cloneable{
     }
     
     
+    /**
+     * Palauttaa halutun kentän vastaavan kysymyksen
+     * @param k kenttä jonka vastaava kysymys palautetaan
+     * @return kenttää vastaava kysymys
+     */
     public String getKysymys(int k) {
         switch (k) {
         case 0: return "Id nro";
@@ -376,6 +336,23 @@ public class Levy implements Cloneable{
     }
     
     
+    /**
+     * Vertaa levyjen tietoja toisiinsa
+     * @param levy johon verrataan
+     * @return true jos tiedot samat, false jos ei
+     * @example
+     * <pre name="test">
+     * Levy levy1 = new Levy();
+     * levy1.parse(" 1 | In Rainbows | Radiohead");
+     * Levy levy2 = new Levy();
+     * levy2.parse(" 1 | In Rainbows | Radiohead");
+     * Levy levy3 = new Levy();
+     * levy3.parse(" 2 | Madvillainy | Madvillain");
+     * 
+     * levy1.equals(levy2) === true;
+     * levy2.equals(levy3) === false;
+     * </pre>
+     */
     public boolean equals(Levy levy) {
         if (levy == null) return false;
         for (int k = 0; k < getKenttia(); k++)

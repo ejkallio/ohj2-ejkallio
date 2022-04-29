@@ -1,6 +1,5 @@
 package fxLP;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -10,7 +9,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import LP.Genre;
-import LP.Levy;
 import fi.jyu.mit.fxgui.Dialogs;
 import fi.jyu.mit.fxgui.ModalController;
 import fi.jyu.mit.fxgui.ModalControllerInterface;
@@ -18,6 +16,12 @@ import fi.jyu.mit.fxgui.ModalControllerInterface;
 import javafx.stage.Stage;
 
 
+/**
+ * Controllerluokka genrejen käsittelyyn
+ * @author Kivikallio
+ * @version 29.4.2022
+ *
+ */
 public class GenreController implements ModalControllerInterface<Genre>, Initializable {
     
     @FXML private TextField editGenre;
@@ -25,7 +29,6 @@ public class GenreController implements ModalControllerInterface<Genre>, Initial
     @FXML private Label labelVirhe;
     
     private Genre genreKohdalla;
-    private String vastaus = null;
     private int kentta = 0;
 
     @Override
@@ -79,12 +82,19 @@ public class GenreController implements ModalControllerInterface<Genre>, Initial
     }
     
     
+    /**
+     * Tehdään tarvittavat alustukset
+     */
     protected void alusta() {
         if ( editGenre != null )
             editGenre.setOnKeyReleased(e -> kasitteleMuutosGenreen((TextField)(e.getSource())));
     }
     
     
+    /**
+     * Käsitellään genreen tehty muutos
+     * @param edit muuttunut kenttä
+     */
     protected void kasitteleMuutosGenreen(TextField edit) {
         if (genreKohdalla == null) return;
         String s = edit.getText();
@@ -98,7 +108,11 @@ public class GenreController implements ModalControllerInterface<Genre>, Initial
     }
 
 
-
+    /**
+     * Näytetään genren tiedot listaan
+     * @param edit kenttä johon näytetään
+     * @param genre näytettävä genre
+     */
     public static void naytaGenre(TextField edit, Genre genre) {
         edit.setText(genre.getNimi());
     }
@@ -109,6 +123,13 @@ public class GenreController implements ModalControllerInterface<Genre>, Initial
     }
     
     
+    /**
+     * Luo genren dialogin jossa kysytään genren nimeä
+     * @param modalityStage modaalisuus, null = sovellukselle
+     * @param oletus mitä näytetään oletuksena
+     * @param kentta mihin keskitytään näyttäessä
+     * @return null jos painetaan cancel, muuten genreikkuna
+     */
     public static Genre kysyNimi(Stage modalityStage, Genre oletus, int kentta) {
         return ModalController.<Genre, GenreController>showModal(
                 LPNimiController.class.getResource("GenreDialogView.fxml"),

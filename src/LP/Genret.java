@@ -14,7 +14,7 @@ import java.util.*;
  * Levykirjaston genret, joka osaa mm. lisätä uuden genren
  * 
  * @author Kivikallio
- * @version 31.3.2022
+ * @version 27.4.2022
  *
  */
 public class Genret implements Iterable<Genre> {
@@ -145,6 +145,19 @@ public class Genret implements Iterable<Genre> {
      * Poistaa halutun genren
      * @param genre joka halutaan poistaa
      * @return true jos poistettava löytyi
+     * @example
+     * <pre name="test">
+     * Genret genret = new Genret();
+     * Genre gen1 = new Genre(); gen1.defaultGenre(1);
+     * Genre gen2 = new Genre(); gen2.defaultGenre(2);
+     * Genre gen3 = new Genre(); gen3.defaultGenre(3);
+     * genret.lisaa(gen1);
+     * genret.lisaa(gen2);
+     * genret.poista(gen3) === false;
+     * genret.getLkm() === 2;
+     * genret.poista(gen2);
+     * genret.getLkm() === 1;
+     * </pre>
      */
     public boolean poista(Genre genre) {
         boolean ret = alkiot.remove(genre);
@@ -153,6 +166,23 @@ public class Genret implements Iterable<Genre> {
     }
     
     
+    /**
+     * Poistaa valitun levyn kaikki genret
+     * @param idNro levy jonka genret poistetaan
+     * @return poistettujen genrejen lukumäärä
+     * @example
+     * <pre name="test">
+     * Genret genret = new Genret();
+     * Genre gen1 = new Genre(); gen1.defaultGenre(1);
+     * Genre gen2 = new Genre(); gen2.defaultGenre(2);
+     * Genre gen3 = new Genre(); gen3.defaultGenre(2);
+     * genret.lisaa(gen1);
+     * genret.lisaa(gen2);
+     * genret.lisaa(gen3);
+     * genret.poistaLevynGenret(2) === 2; genret.getLkm() === 1;
+     * genret.poistaLevynGenret(4) === 0; genret.getLkm() === 1;
+     * </pre>
+     */
     public int poistaLevynGenret(int idNro) {
         int n = 0;
         for (Iterator<Genre> it = alkiot.iterator(); it.hasNext();) {
@@ -168,7 +198,7 @@ public class Genret implements Iterable<Genre> {
     
     
     /**
-     * Palauttaa kirjaston Genrejen lukumäärän
+     * Palauttaa kirjaston Genrejen määrän
      * @return genrejen lukumäärä
      */
     public int getLkm() {
@@ -177,7 +207,7 @@ public class Genret implements Iterable<Genre> {
     
     
     /**
-     * Iteraattori kaikkien genrejen läpikäymiseen
+     * Iteraattori genreille
      * @return genreiteraattori
      * @example
      * <pre name="test">

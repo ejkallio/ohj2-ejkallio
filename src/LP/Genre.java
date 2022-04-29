@@ -8,7 +8,7 @@ import fi.jyu.mit.ohj2.Mjonot;
  * Genre joka osaa itse huolehtia tunnusnumerostaan
  * 
  * @author Kivikallio
- * @version 31.3.2022
+ * @version 27.4.2022
  *
  */
 public class Genre {
@@ -23,13 +23,13 @@ public class Genre {
      * Alustetaan genre
      */
     public Genre() {
-        // kesken
+        // tyhjä
     }
     
     
     /**
      * Alustetaan genre halutulle levylle
-     * @param levyNro levyn viitenumero
+     * @param levyNro levyn tunnusnumero
      */
     public Genre(int levyNro) {
         this.levyNro = levyNro;
@@ -104,6 +104,10 @@ public class Genre {
     }
     
     
+    /**
+     * Haetaan ja palautetaan genren nimi
+     * @return genren nimi
+     */
     public String getNimi() {
         return genre;
     }
@@ -120,6 +124,11 @@ public class Genre {
     }
     
     
+    /**
+     * Asetetaan genrelle nimi
+     * @param nimi joka annetaan genrelle
+     * @return null
+     */
     public String setNimi(String nimi) {
         String tjono = nimi.trim();
         genre = tjono;

@@ -8,18 +8,22 @@ import fi.jyu.mit.fxgui.Dialogs;
 import fi.jyu.mit.fxgui.ModalController;
 import fi.jyu.mit.fxgui.ModalControllerInterface;
 import fi.jyu.mit.ohj2.Mjonot;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 
+/**
+ * Kontrolleriluokka levyjen lisäämiseen ja niiden muokkaamiseen käyttöliittymässä
+ * @author Kivikallio
+ * @version 29.4.2022
+ *
+ */
 public class LPLevyController implements ModalControllerInterface<Levy>, Initializable{
     
 
@@ -51,7 +55,7 @@ public class LPLevyController implements ModalControllerInterface<Levy>, Initial
         ModalController.closeStage(gridLevy);
     }
 
-    @FXML void handleValitseKuva(ActionEvent event) {
+    @FXML void handleValitseKuva() {
         Dialogs.showMessageDialog("Ei osata vielä lisätä kansikuvia");
     }
     
@@ -62,6 +66,11 @@ public class LPLevyController implements ModalControllerInterface<Levy>, Initial
     private int kentta = 0;
     
     
+    /**
+     * Luodaan tekstikentät levyn tietojen näyttämiselle
+     * @param gridLevy gridpane johon kentät luodaan
+     * @return tekstikentät
+     */
     public static TextField[] luoKentat(GridPane gridLevy) {
         gridLevy.getChildren().clear();
         TextField[] edits = new TextField[apulevy.getKenttia()];
@@ -78,6 +87,10 @@ public class LPLevyController implements ModalControllerInterface<Levy>, Initial
     }
     
     
+    /**
+     * Tyhjennetään tekstikentät
+     * @param edits tekstikenttätaulukko
+     */
     public static void tyhjenna(TextField[] edits) {
         for (TextField edit : edits)
             if (edit != null) edit.setText("");
@@ -97,6 +110,9 @@ public class LPLevyController implements ModalControllerInterface<Levy>, Initial
     }
     
     
+    /**
+     * Tehdään tarvittavat alustukset
+     */
     protected void alusta() {
         edits = luoKentat(gridLevy);
         for (TextField edit : edits)
@@ -117,20 +133,22 @@ public class LPLevyController implements ModalControllerInterface<Levy>, Initial
     }
     
     
-    private void kasitteleMuutosLevyyn(int k, TextField edit) {
+    private void kasitteleMuutosLevyyn(TextField edit) {
         if (levyKohdalla == null) return;
+        int k = getFieldId(edit,apulevy.ekaKentta());
         String s = edit.getText();
         String virhe = null;
-        switch (k) {
-            case 1 : virhe = levyKohdalla.setNimi(s); break;
-            case 2 : virhe = levyKohdalla.setArtisti(s); break;
-            case 3 : virhe = levyKohdalla.setJulkaisu(s); break;
-            case 4 : virhe = levyKohdalla.setYhtio(s); break;
-            case 5 : virhe = levyKohdalla.setFormat(s); break;
-            case 6 : virhe = levyKohdalla.setVari(s); break;
-            case 7 : virhe = levyKohdalla.setTietoja(s); break;
-            default:
-        }
+        virhe = levyKohdalla.aseta(k, s);
+        //switch (k) {
+        //    case 1 : virhe = levyKohdalla.setNimi(s); break;
+        //    case 2 : virhe = levyKohdalla.setArtisti(s); break;
+        //    case 3 : virhe = levyKohdalla.setJulkaisu(s); break;
+        //    case 4 : virhe = levyKohdalla.setYhtio(s); break;
+        //    case 5 : virhe = levyKohdalla.setFormat(s); break;
+        //    case 6 : virhe = levyKohdalla.setVari(s); break;
+        //    case 7 : virhe = levyKohdalla.setTietoja(s); break;
+        //    default:
+        //}
         if (virhe == null) {
             Dialogs.setToolTipText(edit, "");
             edit.getStyleClass().removeAll("virhe");
@@ -168,7 +186,11 @@ public class LPLevyController implements ModalControllerInterface<Levy>, Initial
     }
     
     
-    
+    /**
+     * Näytetään levyn haluttu tieto tiettyyn tekstikenttään
+     * @param edits tekstikenttätaulukko
+     * @param levy jonka tiedot näytetään
+     */
     public static void naytaLevy(TextField[] edits, Levy levy) {
         if (levy == null) return;
         for (int k = levy.ekaKentta(); k < levy.getKenttia(); k++) {
@@ -177,6 +199,13 @@ public class LPLevyController implements ModalControllerInterface<Levy>, Initial
     }
     
     
+    /**
+     * Luodaan kysymisdialogi uusien levyjen lisäämiseen tai muokkaamiseen
+     * @param modalityStage modaalisuus, null = sovellukselle
+     * @param oletus mitä näytetään oletuksena
+     * @param kentta mihin keskitytään kun näytetään
+     * @return null jos painetaan cancel, muuten levydialogi
+     */
     public static Levy kysyLevy(Stage modalityStage, Levy oletus, int kentta) {
         return ModalController.<Levy, LPLevyController>showModal(
                 LPLevyController.class.getResource("LevyDialogView.fxml"),
@@ -185,16 +214,5 @@ public class LPLevyController implements ModalControllerInterface<Levy>, Initial
                 ctrl -> ctrl.setKentta(kentta)
                 );
     }
-    
-    
-    protected void kasitteleMuutosLevyyn(TextField edit) {
-        if (levyKohdalla == null) return;
-            int k = getFieldId(edit,apulevy.ekaKentta());
-            String s = edit.getText();
-            String virhe = null;
-            virhe = levyKohdalla.aseta(k,s);
-            if (virhe == null)
-                Dialogs.setToolTipText(edit, "");
-                edit.getStyleClass().removeAll("virhe");
-    }
+ 
 }

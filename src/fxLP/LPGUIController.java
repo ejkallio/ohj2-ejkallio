@@ -26,11 +26,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.Font;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 
@@ -48,6 +47,8 @@ public class LPGUIController implements Initializable {
     
     @FXML private Label labelVirhe;
     
+    @FXML private ImageView kuva;
+    
     @FXML private ScrollPane panelLevy;
     
     @FXML private ListChooser<Levy> chooserLevyt;
@@ -55,20 +56,7 @@ public class LPGUIController implements Initializable {
     @FXML private ListChooser<Genre> chooserGenret;
     
     @FXML private GridPane gridLevy;
-    
-    @FXML private TextField editArtisti;
-
-    @FXML private TextField editFormat;
-
-    @FXML private TextField editJulk;
-
-    @FXML private TextField editNimi;
-
-    @FXML private TextField editTietoja;
-
-    @FXML private TextField editVari;
-
-    @FXML private TextField editYhtio;
+   
     
     @Override
     public void initialize(URL url, ResourceBundle bundle) {
@@ -117,10 +105,6 @@ public class LPGUIController implements Initializable {
         ModalController.showModal(LPGUIController.class.getResource("LPGUIView.fxml"), "Kirjasto", null, "");
     }
 
-    @FXML private void handleSiirryToivelistaan() {
-        Dialogs.showMessageDialog("Toivelista kesken");
-    }
-
     @FXML private void handleSulje() {
         tallenna();
         Platform.exit();
@@ -130,7 +114,7 @@ public class LPGUIController implements Initializable {
         tallenna();
     }
     
-    @FXML void handleApua(ActionEvent event) {
+    @FXML void handleApua() {
         avustus();
     }
     
@@ -145,13 +129,9 @@ public class LPGUIController implements Initializable {
     
     
     /**
-     * Tekee tarvittavat muut alustukset
+     * Tekee tarvittavat alustukset
      */
     protected void alusta() {
-        //panelLevy.setContent(areaLevy);
-        //areaLevy.setFont(new Font("Courier New", 12));
-        //panelLevy.setFitToHeight(true);
-        
         chooserLevyt.clear();
         chooserLevyt.addSelectionListener(e -> naytaLevy());
         
@@ -208,6 +188,10 @@ public class LPGUIController implements Initializable {
     }
     
     
+    /**
+     * Kysytään kirjastotiedoston nimi ja luetaan se
+     * @return true jos onnistui, false jos ei
+     */
     public boolean avaa() {
         String uusinimi = LPNimiController.kysyNimi(null, kirjastonnimi);
         if (uusinimi == null) return false;
@@ -335,6 +319,11 @@ public class LPGUIController implements Initializable {
 
         LPLevyController.naytaLevy(edits, levyKohdalla);
         naytaGenret(levyKohdalla);
+        
+        Image image = new Image("file:coverart/" + levyKohdalla.getNimi().toLowerCase() + ".jpg");
+        kuva.setFitHeight(175);
+        kuva.setFitWidth(175);
+        kuva.setImage(image);
     }
     
     
@@ -373,6 +362,11 @@ public class LPGUIController implements Initializable {
     }
     
     
+    /**
+     * Tulostaa tekstimuodossa levyn tiedot ja genret
+     * @param os printstream johon tulostetaan
+     * @param levy levy joka tulostetaan
+     */
     public void tulosta(PrintStream os, final Levy levy) {
         os.println("--------------------------------------------");
         levy.tulosta(os);
@@ -388,6 +382,10 @@ public class LPGUIController implements Initializable {
     }
     
     
+    /**
+     * Muokataan valittua levyä tekemättä uutta levyä
+     * @param k
+     */
     private void muokkaa(int k) {
         if (levyKohdalla == null) return;
         try {
@@ -404,6 +402,9 @@ public class LPGUIController implements Initializable {
     }
     
     
+    /**
+     * Poistetaan valittu levy listasta
+     */
     private void poistaLevy() {
         Levy levy = levyKohdalla;
         if (levy == null) return;
@@ -430,6 +431,10 @@ public class LPGUIController implements Initializable {
     }
     
     
+    /**
+     * Tulostaa tekstialueeseen listassa olevat levyt
+     * @param text tekstialue 
+     */
     public void tulostaValitut(TextArea text) {
         try (PrintStream os = TextAreaOutputStream.getTextPrintStream(text)) {
             os.println("Tulostetaan kaikki jäsenet");

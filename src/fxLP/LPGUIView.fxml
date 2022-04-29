@@ -19,7 +19,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxLP.LPGUIController">
+<BorderPane prefHeight="500.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxLP.LPGUIController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
@@ -36,12 +36,6 @@
               <MenuItem mnemonicParsing="false" onAction="#handlePoistaLevy" text="Poista" />
             </items>
           </Menu>
-            <Menu mnemonicParsing="false" text="Siirry">
-              <items>
-                <MenuItem mnemonicParsing="false" onAction="#handleSiirryKirjastoon" text="Kirjasto" />
-                  <MenuItem mnemonicParsing="false" onAction="#handleSiirryToivelistaan" text="Toivelista" />
-              </items>
-            </Menu>
           <Menu mnemonicParsing="false" text="Apua">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#handleNaytaTiedot" text="Tietoja" />
@@ -52,35 +46,30 @@
       </MenuBar>
    </top>
    <left>
-      <BorderPane BorderPane.alignment="CENTER">
-         <bottom>
-            <BorderPane prefWidth="200.0" BorderPane.alignment="CENTER">
-               <center>
-                  <ListChooser fx:id="chooserLevyt" BorderPane.alignment="CENTER" />
-               </center>
-               <top>
-                  <Label text="Levyt" BorderPane.alignment="CENTER" />
-               </top>
-            </BorderPane>
-         </bottom>
+      <BorderPane prefWidth="200.0" BorderPane.alignment="CENTER">
          <center>
-            <VBox alignment="TOP_CENTER" prefWidth="100.0" spacing="5.0" BorderPane.alignment="CENTER">
+            <VBox alignment="TOP_CENTER" spacing="5.0" BorderPane.alignment="TOP_CENTER">
                <children>
-                  <Label text="Haku" />
-                  <TextField fx:id="hakuehto" onAction="#handleHakuehto" />
-                  <ComboBoxChooser fx:id="cbKentat" onAction="#handleHakuehto" rivit="Levyn nimi&#10;Artistin nimi&#10;Levy-yhtiö&#10;JulkaisuvuosiJulkaisuvuosi" />
+                  <Label text="Haku">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin></Label>
+                  <TextField fx:id="hakuehto" onAction="#handleHakuehto">
+                     <VBox.margin>
+                        <Insets left="5.0" right="5.0" />
+                     </VBox.margin></TextField>
+                  <ComboBoxChooser fx:id="cbKentat" onAction="#handleHakuehto" prefWidth="190.0" rivit="Levyn nimi&#10;Artistin nimi&#10;Levy-yhtiö&#10;JulkaisuvuosiJulkaisuvuosi" />
+                  <Label text="Levyt" />
+                  <ListChooser fx:id="chooserLevyt" />
                </children>
-               <padding>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </padding>
             </VBox>
          </center>
       </BorderPane>
    </left>
    <center>
-      <ScrollPane fx:id="panelLevy" fitToWidth="true" minWidth="300.0" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <ScrollPane fx:id="panelLevy" fitToWidth="true" prefWidth="300.0" BorderPane.alignment="CENTER">
          <content>
-            <GridPane fx:id="gridLevy" hgap="10.0">
+            <GridPane fx:id="gridLevy" hgap="10.0" vgap="10.0">
               <columnConstraints>
                 <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="60.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -140,42 +129,8 @@
          </content>
       </ScrollPane>
    </center>
-   <right>
-      <BorderPane prefHeight="200.0" BorderPane.alignment="CENTER">
-         <center>
-            <ImageView fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="TOP_RIGHT">
-               <image>
-                  <Image url="@../../../../../../Downloads/madvillainy.png" />
-               </image></ImageView>
-         </center>
-         <top>
-            <Label text="Kansikuva" BorderPane.alignment="CENTER" />
-         </top>
-         <bottom>
-            <BorderPane prefHeight="250.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-               <center>
-                  <ListChooser fx:id="chooserGenret" BorderPane.alignment="CENTER" />
-               </center>
-               <top>
-                  <Label text="Genre" BorderPane.alignment="CENTER" />
-               </top>
-               <bottom>
-                  <HBox spacing="10.0" BorderPane.alignment="CENTER">
-                     <children>
-                        <Button mnemonicParsing="false" onAction="#handleLisaaGenre" text="Lisää Genre" />
-                        <Button mnemonicParsing="false" onAction="#handlePoistaGenre" text="Poista Genre" />
-                     </children>
-                     <padding>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </padding>
-                  </HBox>
-               </bottom>
-            </BorderPane>
-         </bottom>
-      </BorderPane>
-   </right>
    <bottom>
-      <VBox alignment="TOP_CENTER" minHeight="50.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+      <VBox alignment="TOP_CENTER" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
             <Label fx:id="labelVirhe" alignment="CENTER" />
             <HBox prefWidth="200.0" spacing="10.0">
@@ -191,4 +146,37 @@
          </children>
       </VBox>
    </bottom>
+   <right>
+      <BorderPane prefWidth="200.0" BorderPane.alignment="CENTER">
+         <center>
+            <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="TOP_CENTER">
+               <children>
+                  <ImageView fx:id="kuva" fitHeight="175.0" fitWidth="175.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../../../Desktop/Näyttökuva%202022-4-29%20kello%2012.30.43.png" />
+                     </image>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </ImageView>
+                  <Label text="Genret">
+                     <VBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </VBox.margin>
+                  </Label>
+                  <ListChooser fx:id="chooserGenret" />
+                  <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#handleLisaaGenre" text="Lisää genre" />
+                        <Button mnemonicParsing="false" onAction="#handlePoistaGenre" text="Poista genre" />
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </HBox>
+               </children>
+            </VBox>
+         </center>
+      </BorderPane>
+   </right>
 </BorderPane>

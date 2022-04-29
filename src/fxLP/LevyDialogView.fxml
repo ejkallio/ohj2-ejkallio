@@ -6,8 +6,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -84,25 +82,4 @@
          </content>
       </ScrollPane>
    </center>
-   <right>
-      <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
-         <children>
-            <Label text="Kansikuva">
-               <padding>
-                  <Insets bottom="5.0" top="5.0" />
-               </padding>
-            </Label>
-            <ImageView fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../../../../../Downloads/stationtostation.jpg" />
-               </image>
-            </ImageView>
-            <Button mnemonicParsing="false" onAction="#handleValitseKuva" text="Valitse kuva">
-               <VBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </VBox.margin>
-            </Button>
-         </children>
-      </VBox>
-   </right>
 </BorderPane>
